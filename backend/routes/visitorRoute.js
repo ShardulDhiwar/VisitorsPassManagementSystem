@@ -1,12 +1,19 @@
 import express from "express";
-import { createVisitor, getAllVisitors } from "../controllers/visitorController.js";
+import {
+    registerVisitor,
+    getVisitorPass,
+    getAllVisitors
+} from "../controllers/visitorController.js";
 
 const router = express.Router();
 
-// POST /api/visitors/create
-router.post("/create", createVisitor);
+// POST /api/visitors/register
+router.post("/register", registerVisitor);
 
-// GET /api/visitors/all
-router.get("/all", getAllVisitors);
+// GET /api/visitors/my-pass/:token
+router.get("/my-pass/:token", getVisitorPass);
+
+// GET /api/visitors
+router.get("/", getAllVisitors);
 
 export default router;
