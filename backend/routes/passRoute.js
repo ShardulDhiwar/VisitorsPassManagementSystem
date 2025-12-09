@@ -1,0 +1,23 @@
+import express from "express";
+import {
+    issuePass,
+    scanPass,
+    getAllPasses,
+    updatePassStatus
+} from "../controllers/passController.js";
+
+const router = express.Router();
+
+// Issue pass
+router.post("/issue", issuePass);
+
+// Scan QR Pass
+router.get("/scan/:token", scanPass);
+
+// Get all passes
+router.get("/", getAllPasses);
+
+// Update pass status
+router.put("/:id/status", updatePassStatus);
+
+export default router;

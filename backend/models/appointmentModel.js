@@ -1,14 +1,16 @@
 import mongoose from "mongoose";
 
 const appointmentSchema = new mongoose.Schema({
-    visitorName: { type: String, required: true },
-    visitorEmail: { type: String },
-    visitorPhone: { type: String, required: true },
+    visitorId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Visitor",
+        required: true
+    },
 
     purpose: { type: String, required: true },
     date: { type: Date, required: true },
 
-    hostId: { type: String, required: true },   // Employee who invited
+    hostId: { type: String, required: true },
     hostName: { type: String },
 
     status: {

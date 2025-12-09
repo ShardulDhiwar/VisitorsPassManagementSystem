@@ -4,8 +4,8 @@ const visitorSchema = new mongoose.Schema({
     name: { type: String, required: true },
     phone: { type: String, required: true },
     email: { type: String },
-    purpose: { type: String, required: true },
-    whomToMeet: { type: String, required: true },
+    purpose: { type: String },
+    whomToMeet: { type: String },
 
     passToken: { type: String, unique: true },
 
