@@ -5,7 +5,7 @@ import Visitor from "../models/visitorModel.js";
 // CHECK-IN
 export const checkIn = async (req, res) => {
     try {
-        const { token, doneBy } = req.body;
+        const { token, doneBy = "security-manual" } = req.body;
 
         const pass = await Pass.findOne({ token })
             .populate("visitorId")
@@ -15,16 +15,22 @@ export const checkIn = async (req, res) => {
             return res.status(404).json({ success: false, message: "Invalid pass token" });
 
         if (pass.status !== "issued")
-            return res.status(400).json({ success: false, message: "Pass already used or revoked" });
+            return res.status(400).json({
+                success: false,
+                message: "Pass already used or expired"
+            });
 
-        // Mark visitor inside
-        await Visitor.findByIdAndUpdate(pass.visitorId._id, { isInside: true });
+        // Visitor enters
+        await Visitor.findByIdAndUpdate(pass.visitorId._id, {
+            isInside: true,
+            entryTime: new Date()
+        });
 
-        // Update pass status
+        // Update pass
         pass.status = "used";
         await pass.save();
 
-        // Log entry
+        // Log
         await CheckLog.create({
             visitorId: pass.visitorId._id,
             passId: pass._id,
@@ -33,24 +39,21 @@ export const checkIn = async (req, res) => {
             doneBy
         });
 
-        const updatedVisitor = await Visitor.findById(pass.visitorId._id);
-
         res.json({
             success: true,
-            message: "Visitor checked in",
-            visitor: updatedVisitor
+            message: "Check-in successful"
         });
-
 
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
 };
 
+
 // CHECK-OUT
 export const checkOut = async (req, res) => {
     try {
-        const { token, doneBy } = req.body;
+        const { token, doneBy = "security-manual" } = req.body;
 
         const pass = await Pass.findOne({ token })
             .populate("visitorId")
@@ -59,13 +62,23 @@ export const checkOut = async (req, res) => {
         if (!pass)
             return res.status(404).json({ success: false, message: "Invalid pass token" });
 
-        if (!pass.visitorId.isInside)
-            return res.status(400).json({ success: false, message: "Visitor is not inside" });
+        if (pass.status !== "used")
+            return res.status(400).json({
+                success: false,
+                message: "Pass is not active or already expired"
+            });
 
-        // Mark visitor outside
-        await Visitor.findByIdAndUpdate(pass.visitorId._id, { isInside: false });
+        // Visitor exits
+        await Visitor.findByIdAndUpdate(pass.visitorId._id, {
+            isInside: false,
+            exitTime: new Date()
+        });
 
-        // Log exit
+        // Expire pass
+        pass.status = "expired";
+        await pass.save();
+
+        // Log
         await CheckLog.create({
             visitorId: pass.visitorId._id,
             passId: pass._id,
@@ -74,17 +87,15 @@ export const checkOut = async (req, res) => {
             doneBy
         });
 
-        // Get updated visitor
-        const updatedVisitor = await Visitor.findById(pass.visitorId._id);
-
         res.json({
             success: true,
-            message: "Visitor checked out",
-            visitor: updatedVisitor
+            message: "Check-out successful. Pass expired."
         });
 
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
+
 

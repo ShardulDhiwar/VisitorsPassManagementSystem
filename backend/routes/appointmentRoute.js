@@ -1,5 +1,5 @@
 import express from "express";
-import { createAppointment, getAllAppointments, getAppointments, updateAppointmentStatus } from "../controllers/appointmentController.js";
+import { createAppointment, getAllAppointments, getAppointmentByHost, getAppointmentByVisitor, updateAppointmentStatus } from "../controllers/appointmentController.js";
 
 
 const router = express.Router();
@@ -8,12 +8,16 @@ const router = express.Router();
 router.post("/invite", createAppointment);
 
 // Get appointments (filter by hostId)
-router.get("/", getAppointments);
+router.get("/", getAppointmentByHost);
+
+// Get appointments by visitor
+router.get("/visitor/:visitorId", getAppointmentByVisitor);
+
+// Admin: get all (must come BEFORE dynamic routes)
+router.get("/all", getAllAppointments);
 
 // Update status (approve/reject)
 router.put("/:id/status", updateAppointmentStatus);
 
-// Admin: get all
-router.get("/all", getAllAppointments);
-
 export default router;
+

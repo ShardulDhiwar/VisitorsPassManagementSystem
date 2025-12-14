@@ -11,14 +11,13 @@ const passSchema = new mongoose.Schema({
     appointmentId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Appointment",
-        required: true
     },
 
     token: { type: String, required: true, unique: true },
 
     status: {
         type: String,
-        enum: ["issued", "used", "revoked"],
+        enum: ["issued", "used", "revoked", "expired"],
         default: "issued"
     },
 
