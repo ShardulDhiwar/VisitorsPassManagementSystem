@@ -1,4 +1,6 @@
 import express from "express";
+import requireAuth from "../middlewares/authMiddleware.js";
+import requireRole from "../middlewares/roleMiddleware.js";
 import {
     issuePass,
     scanPass,
@@ -12,7 +14,9 @@ const router = express.Router();
 router.post("/issue", issuePass);
 
 // Scan QR Pass
-router.get("/scan/:token", scanPass);
+router.get("/scan/:token", requireAuth,
+    requireRole("SECURITY"),
+    scanPass);
 
 // Get all passes
 router.get("/", getAllPasses);

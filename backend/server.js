@@ -6,6 +6,7 @@ import visitorRoute from './routes/visitorRoute.js';
 import appointmentRoute from './routes/appointmentRoute.js'
 import passRoute from './routes/passRoute.js'
 import checkRoute from './routes/checkRoute.js'
+import authRoute from './routes/authRoute.js'
 
 
 dotenv.config();
@@ -21,6 +22,8 @@ app.use("/api/visitors", visitorRoute);
 app.use("/api/appointments", appointmentRoute);
 app.use("/api/passes", passRoute);
 app.use("/api/check", checkRoute);
+app.use("/api/auth", authRoute);
+
 
 
 

@@ -53,7 +53,8 @@ export const checkIn = async (req, res) => {
 // CHECK-OUT
 export const checkOut = async (req, res) => {
     try {
-        const { token, doneBy = "security-manual" } = req.body;
+        const token = req.body;
+        const doneBy = req.user.name;
 
         const pass = await Pass.findOne({ token })
             .populate("visitorId")
