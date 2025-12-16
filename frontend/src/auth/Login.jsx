@@ -1,9 +1,13 @@
-import React from 'react'
+const login = (userData, jwt) => {
+  setUser(userData);
+  setToken(jwt);
+  localStorage.setItem("token", jwt);
 
-const Login = () => {
-  return (
-    <div>Login</div>
-  )
-}
-
-export default Login
+  if (userData.role === "ADMIN") {
+    window.location.href = "/admin";
+  } else if (userData.role === "SECURITY") {
+    window.location.href = "/security";
+  } else {
+    window.location.href = "/employee";
+  }
+};
