@@ -1,1 +1,15 @@
 @import "tailwindcss";
+@layer utilities {
+  @keyframes slowBounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-12px);
+    }
+  }
+
+  .animate-slow-bounce {
+    animation: slowBounce 2s ease-in-out infinite;
+  }
+}
