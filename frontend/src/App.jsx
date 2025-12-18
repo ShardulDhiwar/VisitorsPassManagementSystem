@@ -3,6 +3,7 @@ import LoginPage from "./pages/LoginPage";
 import ProtectedRoute from "./routing/ProtectedRoute";
 import DashboardLayout from "./layouts/DashboardLayout";
 import VisitorsForm from "./pages/VisitorsForm";
+import { ToastContainer } from "react-toastify";
 
 // Dummy pages
 const AdminHome = () => <h1>Admin Dashboard</h1>;
@@ -59,6 +60,7 @@ function App() {
 
         <Route path="*" element={<LoginPage />} />
       </Routes>
+      <ToastContainer position="top-right" autoClose={2000} />
     </BrowserRouter>
   );
 }

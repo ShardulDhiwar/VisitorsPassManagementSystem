@@ -1,12 +1,12 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import api from "../api/axios";
 import { AuthContext } from "../context/AuthContext";
 import LoginSVG from "../assets/LoginSVG.png";
 // import LoginSVG from "../assets/LoginSVGgreen.png";
 import GateKeeper from "../assets/GateKeeper.png";
-import GateKeeperWhite from "../assets/GateKeeperWhite.png"
+import GateKeeperWhite from "../assets/GateKeeperWhite.png";
 
 const LoginPage = () => {
   const { login } = useContext(AuthContext);
@@ -85,38 +85,39 @@ const LoginPage = () => {
       </div>
 
       {/* RIGHT — IMAGE */}
-      <div className="hidden lg:flex w-6xl items-center flex-col bg-[#017d48]">
-        <div className="p-2 m-2 flex justify-center flex-col ">
-          <div className="flex items-center px-2">
+      <div className="hidden lg:flex lg:w-3/4 items-start bg-[#017d48] pl-8 pt-8 relative">
+        <div className="w-full">
+          <div className="flex items-center mb-4">
             <img
               src={GateKeeperWhite}
               alt="GateKeeper Logo"
-              className="w-8 h-auto "
+              className="w-10 h-auto"
             />
-            <h2 className="text-white text-3xl font-bold p-1 m-1">
-              GateKeeper
-            </h2>
+            <h2 className="text-white text-3xl font-bold ml-3">GateKeeper</h2>
           </div>
-          <hr className="text-white" />
-          <p className="text-white text-lg w-1/2 p-1 m-1 mt-4">
+
+          <hr className="border-white/30 mb-6 max-w-2xl" />
+
+          <p className="text-white text-lg mb-8 leading-relaxed max-w-2xl">
             GateKeeper is a secure visitor and access management system that
             streamlines check-ins, appointments, and on-site security for
             organizations.
           </p>
+
           <Link
             to="/visitorsForm"
-            className="p-2 text-slate-200 text-2xl underline hover:cursor-pointer hover:text-slate-400 "
+            className="inline-block text-slate-200 text-xl underline hover:text-slate-400 mb-8"
           >
             Get Appointment as a Visitor →
           </Link>
         </div>
-        <div className="relative w-full flex justify-center p-2 m-4">
-          <img
-            src={LoginSVG}
-            alt="Login Illustration"
-            className="absolute right-3 w-200 animate-slow-bounce "
-          />
-        </div>
+
+        {/* Image positioned at bottom right */}
+        <img
+          src={LoginSVG}
+          alt="Login Illustration"
+          className="absolute bottom-8 right-8 w-190 animate-slow-bounce"
+        />
       </div>
     </div>
   );
