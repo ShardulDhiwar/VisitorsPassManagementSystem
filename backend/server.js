@@ -7,7 +7,7 @@ import appointmentRoute from './routes/appointmentRoute.js'
 import passRoute from './routes/passRoute.js'
 import checkRoute from './routes/checkRoute.js'
 import authRoute from './routes/authRoute.js'
-
+import userRoute from './routes/userRoute.js'
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
@@ -23,6 +23,7 @@ app.use("/api/appointments", appointmentRoute);
 app.use("/api/passes", passRoute);
 app.use("/api/check", checkRoute);
 app.use("/api/auth", authRoute);
+app.use("/api/users", userRoute);
 
 
 

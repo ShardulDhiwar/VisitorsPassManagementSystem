@@ -2,12 +2,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import ProtectedRoute from "./routing/ProtectedRoute";
 import DashboardLayout from "./layouts/DashboardLayout";
+import AdminDashboard from "./mydashboards/admin/AdminDashboard.jsx";
 import VisitorsForm from "./pages/VisitorsForm";
 import { ToastContainer } from "react-toastify";
+import { AppointmentsProvider } from "./context/AppointmentsContext";
+import UsersPage from "./mydashboards/admin/UserPage.jsx";
 
 // Dummy pages
-const AdminHome = () => <h1>Admin Dashboard</h1>;
-const Users = () => <h1>Users</h1>;
 const Logs = () => <h1>Logs</h1>;
 
 const SecurityHome = () => <h1>Security Dashboard</h1>;
@@ -17,6 +18,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* PUBLIC */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/visitorsForm" element={<VisitorsForm />} />
 
@@ -25,12 +27,14 @@ function App() {
           path="/admin"
           element={
             <ProtectedRoute allowedRoles={["ADMIN"]}>
-              <DashboardLayout />
+              <AppointmentsProvider>
+                <DashboardLayout />
+              </AppointmentsProvider>
             </ProtectedRoute>
           }
         >
-          <Route index element={<AdminHome />} />
-          <Route path="users" element={<Users />} />
+          <Route index element={<AdminDashboard />} />
+          <Route path="users" element={<UsersPage />} />
           <Route path="logs" element={<Logs />} />
         </Route>
 
@@ -39,7 +43,9 @@ function App() {
           path="/security"
           element={
             <ProtectedRoute allowedRoles={["SECURITY"]}>
-              <DashboardLayout />
+              <AppointmentsProvider>
+                <DashboardLayout />
+              </AppointmentsProvider>
             </ProtectedRoute>
           }
         >
@@ -51,15 +57,19 @@ function App() {
           path="/employee"
           element={
             <ProtectedRoute allowedRoles={["EMPLOYEE"]}>
-              <DashboardLayout />
+              <AppointmentsProvider>
+                <DashboardLayout />
+              </AppointmentsProvider>
             </ProtectedRoute>
           }
         >
           <Route index element={<EmployeeHome />} />
         </Route>
 
+        {/* FALLBACK */}
         <Route path="*" element={<LoginPage />} />
       </Routes>
+
       <ToastContainer position="top-right" autoClose={2000} />
     </BrowserRouter>
   );

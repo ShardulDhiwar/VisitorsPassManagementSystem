@@ -61,7 +61,7 @@ const VisitorForm = () => {
     <div className="min-h-screen flex bg-[#f6f4e8]">
       {/* LEFT — VISITOR FORM */}
       <div className="w-full lg:w-1/4 flex items-center justify-center flex-col">
-        <div className="flex flex-col justify-center w-80 min-h-[30rem] max-w-md bg-[#f6f6ef] p-8 pt-4 rounded-xl shadow-lg border-2 border-green-400">
+        <div className="flex flex-col justify-center w-80 min-h-120 max-w-md bg-[#f6f6ef] p-8 pt-4 rounded-xl shadow-lg border-2 border-green-400">
           <div className="flex flex-col items-center mb-4">
             <img
               src={GateKeeper}

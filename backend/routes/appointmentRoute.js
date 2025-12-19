@@ -1,5 +1,5 @@
 import express from "express";
-import requireAuth from "../middlewares/authMiddleware.js";
+import {protect} from "../middlewares/authMiddleware.js";
 import requireRole from "../middlewares/roleMiddleware.js";
 import { createAppointment, getAllAppointments, getAppointmentByHost, getAppointmentByVisitor, updateAppointmentStatus } from "../controllers/appointmentController.js";
 
@@ -7,7 +7,7 @@ import { createAppointment, getAllAppointments, getAppointmentByHost, getAppoint
 const router = express.Router();
 
 // Create invitation
-router.post("/invite", requireAuth,
+router.post("/invite", protect,
     requireRole("EMPLOYEE"), createAppointment);
 
 // Get appointments (filter by hostId)
@@ -20,7 +20,7 @@ router.get("/visitor/:visitorId", getAppointmentByVisitor);
 router.get("/all", getAllAppointments);
 
 // Update status (approve/reject)
-router.put("/:id/status", requireAuth,
+router.put("/:id/status", protect,
     requireRole("ADMIN", "EMPLOYEE"), updateAppointmentStatus);
 
 export default router;
