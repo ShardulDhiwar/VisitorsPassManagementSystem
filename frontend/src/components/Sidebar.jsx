@@ -18,7 +18,10 @@ const Sidebar = () => {
     { name: "Logs", path: "/admin/logs" },
   ];
 
-  const securityMenu = [{ name: "Dashboard", path: "/security" }];
+  const securityMenu = [
+    { name: "Dashboard", path: "/security" },
+    { name: "Logs", path: "/security/logs" },
+  ];
 
   const employeeMenu = [{ name: "Dashboard", path: "/employee" }];
 

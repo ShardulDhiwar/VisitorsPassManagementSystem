@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import api from "../../api/axios";
+import api from "../api/axios";
 import { Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
-import UserStatsCards from "../../components/UserStatsCards";
+import UserStatsCards from "./UserStatsCards";
 
 const ROWS_PER_PAGE = 5;
 const UsersPage = () => {

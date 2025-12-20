@@ -6,10 +6,11 @@ import AdminDashboard from "./mydashboards/admin/AdminDashboard.jsx";
 import VisitorsForm from "./pages/VisitorsForm";
 import { ToastContainer } from "react-toastify";
 import { AppointmentsProvider } from "./context/AppointmentsContext";
-import UsersPage from "./mydashboards/admin/UserPage.jsx";
+import UsersPage from "./components/UserPage.jsx";
+import LogsPage from "./components/LogsPage.jsx"
 
 // Dummy pages
-const Logs = () => <h1>Logs</h1>;
+
 
 const SecurityHome = () => <h1>Security Dashboard</h1>;
 const EmployeeHome = () => <h1>Employee Dashboard</h1>;
@@ -35,7 +36,7 @@ function App() {
         >
           <Route index element={<AdminDashboard />} />
           <Route path="users" element={<UsersPage />} />
-          <Route path="logs" element={<Logs />} />
+          <Route path="logs" element={<LogsPage />} />
         </Route>
 
         {/* SECURITY */}
@@ -50,6 +51,7 @@ function App() {
           }
         >
           <Route index element={<SecurityHome />} />
+          <Route path="logs" element={<LogsPage />} />
         </Route>
 
         {/* EMPLOYEE */}

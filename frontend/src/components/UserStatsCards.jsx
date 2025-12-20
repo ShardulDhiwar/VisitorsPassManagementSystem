@@ -1,4 +1,4 @@
-import { ClipboardList } from "lucide-react";
+import { ClipboardList, ShieldUser, User, UserRound, UserRoundCog, UserStar } from "lucide-react";
 
 const StatCard = ({ title, value, icon }) => (
   // <div className="p-5 rounded-xl shadow bg-white border-l-4 border-green-500">
@@ -23,10 +23,10 @@ const UserStatsCards = ({ users }) => {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-      <StatCard title="Total Users" value={total} icon={<ClipboardList />}  />
-      <StatCard title="Admins" value={admins}  />
-      <StatCard title="Security" value={security} />
-      <StatCard title="Employees" value={employees} />
+      <StatCard title="Total Users" value={total} icon={<ClipboardList />} />
+      <StatCard title="Admins" value={admins} icon={<UserRoundCog />} />
+      <StatCard title="Security" value={security} icon={<ShieldUser />} />
+      <StatCard title="Employees" value={employees} icon={<UserRound />} />
     </div>
   );
 };
