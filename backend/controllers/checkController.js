@@ -98,5 +98,27 @@ export const checkOut = async (req, res) => {
     }
 };
 
+export const getAllCheckLogs = async (req, res) => {
+    try {
+        const logs = await CheckLog.find()
+            .populate("visitorId", "name email phone isInside")
+            .populate("passId", "token status")
+            .populate("appointmentId")
+            .sort({ createdAt: -1 }); // latest first
+
+        res.status(200).json({
+            success: true,
+            count: logs.length,
+            data: logs
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
 
 
