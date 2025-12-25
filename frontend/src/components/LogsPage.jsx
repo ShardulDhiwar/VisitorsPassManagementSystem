@@ -1,20 +1,27 @@
 // 
 import { useEffect, useMemo, useState } from "react";
+import StatCard from "./StatsCard";
 import api from "../api/axios";
-import { ClipboardList, DoorClosed, DoorOpen, Download } from "lucide-react";
+import {
+  ClipboardList,
+  DoorClosed,
+  DoorOpen,
+  Download,
+  Users,
+} from "lucide-react";
 import { toast } from "react-toastify";
 
 /* ---------------- SMALL STAT CARD ---------------- */
 
-const StatCard = ({ title, value, icon, color = "blue" }) => (
-  <div className="p-5 rounded-xl shadow bg-white border-l-4 border-green-500">
-    <div className="flex items-center gap-3">
-      <div className="text-2xl">{icon}</div>
-      <h3 className="text-gray-600 font-medium">{title}</h3>
-    </div>
-    <p className="text-3xl font-bold mt-3">{value}</p>
-  </div>
-);
+// const StatCard = ({ title, value, icon, color = "blue" }) => (
+//   <div className="p-5 rounded-xl shadow bg-white border-l-4 border-green-500">
+//     <div className="flex items-center gap-3">
+//       <div className="text-2xl">{icon}</div>
+//       <h3 className="text-gray-600 font-medium">{title}</h3>
+//     </div>
+//     <p className="text-3xl font-bold mt-3">{value}</p>
+//   </div>
+// );
 
 const ROWS_PER_PAGE = 5;
 
@@ -107,6 +114,8 @@ const LogsPage = () => {
   const totalLogs = logs.length;
   const checkIns = logs.filter((l) => l.action === "check-in").length;
   const checkOuts = logs.filter((l) => l.action === "check-out").length;
+  const inside = Math.max(checkIns - checkOuts, 0);
+
 
   /* ---------------- UI ---------------- */
 
@@ -115,23 +124,30 @@ const LogsPage = () => {
       <h1 className="text-2xl font-semibold mb-6">Security Logs</h1>
 
       {/* STATS CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
         <StatCard
           title="Total Logs"
           value={totalLogs}
           icon={<ClipboardList />}
+          bg="border-blue-500"
         />
         <StatCard
           title="Check-ins"
           value={checkIns}
-          color="green"
           icon={<DoorOpen />}
+          bg="border-green-500"
         />
         <StatCard
           title="Check-outs"
           value={checkOuts}
-          color="red"
           icon={<DoorClosed />}
+          bg="border-red-500"
+        />
+        <StatCard
+          title="Inside"
+          value={inside}
+          icon={<Users />}
+          bg="border-orange-500"
         />
       </div>
 

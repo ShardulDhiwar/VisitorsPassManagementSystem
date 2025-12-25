@@ -1,8 +1,17 @@
 import { useEffect, useState } from "react";
+import StatCard from "./StatsCard";
 import api from "../api/axios";
-import { Trash2 } from "lucide-react";
+import {
+  ClipboardList,
+  ShieldUser,
+  User,
+  UserRound,
+  UserRoundCog,
+  UserStar,
+  Trash2,
+} from "lucide-react";
 import { toast } from "react-toastify";
-import UserStatsCards from "./UserStatsCards";
+
 
 const ROWS_PER_PAGE = 5;
 const UsersPage = () => {
@@ -22,6 +31,12 @@ const UsersPage = () => {
   const endIndex = startIndex + ROWS_PER_PAGE;
 
   const currentusers = users.slice(startIndex, endIndex);
+
+
+const total = users.length;
+const admins = users.filter((u) => u.role === "ADMIN").length;
+const security = users.filter((u) => u.role === "SECURITY").length;
+const employees = users.filter((u) => u.role === "EMPLOYEE").length;
 
   const fetchUsers = async () => {
     try {
@@ -105,7 +120,32 @@ const UsersPage = () => {
     <>
       <div className="p-6">
         <h1 className="text-2xl font-semibold mb-6">Admin Dashboard</h1>
-        <UserStatsCards users={users} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <StatCard
+            title="Total Users"
+            value={total}
+            icon={<ClipboardList />}
+            bg="border-blue-500"
+          />
+          <StatCard
+            title="Admins"
+            value={admins}
+            icon={<UserRoundCog />}
+            bg="border-green-500"
+          />
+          <StatCard
+            title="Security"
+            value={security}
+            icon={<ShieldUser />}
+            bg="border-red-500"
+          />
+          <StatCard
+            title="Employees"
+            value={employees}
+            icon={<UserRound />}
+            bg="border-orange-500"
+          />
+        </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* USERS TABLE */}
           <div className="lg:col-span-2 bg-white p-4 rounded-xl shadow">

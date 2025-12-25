@@ -15,25 +15,25 @@ const AdminDashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <StatsCard
           title="Total Appointments"
-          count={stats.total}
+          value={stats.total}
           icon={<ClipboardList />}
           bg="border-blue-500"
         />
         <StatsCard
           title="Pending Requests"
-          count={stats.pending}
+          value={stats.pending}
           icon={<Clock />}
           bg="border-yellow-500"
         />
         <StatsCard
           title="Approved"
-          count={stats.approved}
+          value={stats.approved}
           icon={<CheckCircle />}
           bg="border-green-500"
         />
         <StatsCard
           title="Visitors Inside"
-          count={stats.inside}
+          value={stats.inside}
           icon={<Users />}
           bg="border-purple-500"
         />

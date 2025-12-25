@@ -8,12 +8,13 @@ import { ToastContainer } from "react-toastify";
 import { AppointmentsProvider } from "./context/AppointmentsContext";
 import UsersPage from "./components/UserPage.jsx";
 import LogsPage from "./components/LogsPage.jsx"
+import SecurityDashboard from './mydashboards/security/SecurityDashboard.jsx'
+import EmployeeDashboard from "./mydashboards/employees/EmployeeDashboard.jsx";
 
 // Dummy pages
 
 
-const SecurityHome = () => <h1>Security Dashboard</h1>;
-const EmployeeHome = () => <h1>Employee Dashboard</h1>;
+
 
 function App() {
   return (
@@ -50,7 +51,7 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<SecurityHome />} />
+          <Route index element={<SecurityDashboard />} />
           <Route path="logs" element={<LogsPage />} />
         </Route>
 
@@ -65,7 +66,7 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<EmployeeHome />} />
+          <Route index element={<EmployeeDashboard />} />
         </Route>
 
         {/* FALLBACK */}
