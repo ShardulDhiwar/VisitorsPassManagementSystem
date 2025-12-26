@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../../api/axios";
 import { toast } from "react-toastify";
 import StatCard from "../../components/StatsCard";
-import { ClipboardList, ShieldUser, UserRound, UserRoundCog } from "lucide-react";
+import { ArrowRightToLine, DoorClosed, DoorOpen, Users } from "lucide-react";
 
 const SecurityDashboard = () => {
   const [token, setToken] = useState("");
@@ -114,59 +114,30 @@ const SecurityDashboard = () => {
       <h1 className="text-2xl font-semibold">Security Dashboard</h1>
 
       {/* KPI CARDS */}
-      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {[
-          {
-            label: "Visitors Inside",
-            value: insideCount,
-            color: "bg-green-100 text-green-700",
-          },
-          {
-            label: "Checked In",
-            value: checkedInCount,
-            color: "bg-blue-100 text-blue-700",
-          },
-          {
-            label: "Checked Out",
-            value: checkedOutCount,
-            color: "bg-gray-100 text-gray-700",
-          },
-          {
-            label: "Total Visitors",
-            value: totalVisitors,
-            color: "bg-purple-100 text-purple-700",
-          },
-        ].map((item, i) => (
-          <div key={i} className={`p-4 rounded-xl shadow ${item.color}`}>
-            <p className="text-sm">{item.label}</p>
-            <p className="text-2xl font-bold">{item.value}</p>
-          </div>
-        ))}
-      </div> */}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <StatCard
           title="Visitors Inside"
           value={insideCount}
-          icon={<ClipboardList />}
+          icon={<ArrowRightToLine />}
           bg="border-blue-500"
         />
         <StatCard
           title="Checked In"
           value={checkedInCount}
-          icon={<UserRoundCog />}
+          icon={<DoorOpen />}
           bg="border-green-500"
         />
         <StatCard
           title="Checked Out"
           value={checkedOutCount}
-          icon={<ShieldUser />}
+          icon={<DoorClosed />}
           bg="border-red-500"
         />
         <StatCard
           title="Total Visitors"
           value={totalVisitors}
-          icon={<UserRound />}
+          icon={<Users />}
           bg="border-orange-500"
         />
       </div>
