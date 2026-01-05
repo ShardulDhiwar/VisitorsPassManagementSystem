@@ -33,7 +33,7 @@ const Sidebar = () => {
       : employeeMenu;
 
   return (
-    <aside className="w-64 bg-[#017d48] p-5 flex flex-col">
+    <aside className="w-64 bg-linear-to-r from-gray-900 to-gray-800 p-5 flex flex-col">
       <div className="flex items-center mb-4">
         <img
           src={GateKeeperWhite}
@@ -50,7 +50,9 @@ const Sidebar = () => {
             to={item.path}
             className={({ isActive }) =>
               `block px-4 py-2 rounded ${
-                isActive ? "bg-green-500 text-black" : "hover:bg-[#204d45]"
+                isActive
+                  ? "bg-gradient-to-r from-gray-600 to-gray-700 text-white"
+                  : "hover:bg-gray-400"
               } text-white`
             }
           >
@@ -61,7 +63,7 @@ const Sidebar = () => {
 
       <button
         onClick={handleLogout}
-        className="mt-auto bg-red-500 text-black py-2 rounded"
+        className="mt-auto bg-gradient-to-r from-red-500 to-red-600 text-black py-2 rounded"
       >
         Logout
       </button>

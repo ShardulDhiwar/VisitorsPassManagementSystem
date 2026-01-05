@@ -18,10 +18,9 @@ const AppointmentDetailsModal = ({ open, onClose, appointment }) => {
 
   const getStatusColor = (status) => {
     const colors = {
-      confirmed: "bg-green-100 text-green-700 border-green-200",
+      approved: "bg-green-100 text-green-700 border-green-200",
       pending: "bg-yellow-100 text-yellow-700 border-yellow-200",
-      cancelled: "bg-red-100 text-red-700 border-red-200",
-      completed: "bg-blue-100 text-blue-700 border-blue-200",
+      rejected: "bg-red-100 text-red-700 border-red-200",
     };
     return (
       colors[status?.toLowerCase()] ||
@@ -31,10 +30,9 @@ const AppointmentDetailsModal = ({ open, onClose, appointment }) => {
 
   const getStatusIcon = (status) => {
     const icons = {
-      confirmed: <CheckCircle className="w-4 h-4" />,
+      approved: <CheckCircle className="w-4 h-4" />,
       pending: <Clock className="w-4 h-4" />,
-      cancelled: <XCircle className="w-4 h-4" />,
-      completed: <CheckCircle className="w-4 h-4" />,
+      rejected: <XCircle className="w-4 h-4" />,
     };
     return icons[status?.toLowerCase()] || <Clock className="w-4 h-4" />;
   };
@@ -43,7 +41,7 @@ const AppointmentDetailsModal = ({ open, onClose, appointment }) => {
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden">
         {/* HEADER */}
-        <div className="bg-linear-to-r from-black to-black px-6 py-5 flex justify-between items-center">
+        <div className="bg-linear-to-r from-gray-900 to-gray-800  px-6 py-5 flex justify-between items-center">
           <div>
             <h2 className="text-xl font-bold text-white">
               Appointment Details

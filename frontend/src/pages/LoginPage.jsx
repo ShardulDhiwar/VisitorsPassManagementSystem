@@ -37,7 +37,7 @@ const LoginPage = () => {
     <div className="min-h-screen flex bg-[#f6f4e8]">
       {/* LEFT — LOGIN FORM */}
       <div className="w-full lg:w-1/4 flex items-center justify-center flex-col">
-        <div className=" flex flex-col justify-center w-80 h-120 max-w-md bg-[#f6f6ef] p-8 pt-0 rounded-xl shadow-lg border-2 border-green-400">
+        <div className=" flex flex-col justify-center w-80 h-120 max-w-md bg-[#f6f6ef] p-8 pt-0 rounded-xl shadow-lg border-2 border-black">
           <div className="flex flex-col items-center justify-start">
             <img
               src={GateKeeper}
@@ -62,7 +62,7 @@ const LoginPage = () => {
             <input
               type="email"
               placeholder="Email"
-              className="w-full p-3 rounded bg-gray-200 text-black outline-none focus:ring-2 focus:ring-green-400"
+              className="w-full p-3 rounded bg-gray-200 text-black outline-none focus:ring-2 focus:ring-gray-400"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -71,13 +71,13 @@ const LoginPage = () => {
             <input
               type="password"
               placeholder="Password"
-              className="w-full p-3 rounded bg-gray-200 text-black outline-none focus:ring-2 focus:ring-green-400"
+              className="w-full p-3 rounded bg-gray-200 text-black outline-none focus:ring-2 focus:ring-black"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
 
-            <button className="w-full bg-green-400 hover:bg-green-500 text-black py-3 rounded font-semibold">
+            <button className="w-full bg-gradient-to-r from-gray-900 to-gray-800 text-white hover:from-gray-800 hover:to-gray-700 py-3 rounded font-semibold transition-all">
               Sign In
             </button>
           </form>
@@ -85,7 +85,7 @@ const LoginPage = () => {
       </div>
 
       {/* RIGHT — IMAGE */}
-      <div className="hidden lg:flex lg:w-3/4 items-start bg-[#017d48] pl-8 pt-8 relative">
+      <div className="hidden lg:flex lg:w-3/4 items-start bg-gradient-to-r from-gray-900 to-gray-800 pl-8 pt-8 relative">
         <div className="w-full">
           <div className="flex items-center mb-4">
             <img
