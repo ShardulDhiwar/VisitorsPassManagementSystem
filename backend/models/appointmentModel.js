@@ -8,6 +8,8 @@ const appointmentSchema = new mongoose.Schema({
     },
 
     purpose: { type: String, required: true },
+    whomToMeet: { type: String, required: true },
+
     date: { type: Date, required: true },
 
     hostId: { type: String, },
