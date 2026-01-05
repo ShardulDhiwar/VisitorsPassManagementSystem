@@ -14,7 +14,7 @@ import {
 const AppointmentDetailsModal = ({ open, onClose, appointment }) => {
   if (!open || !appointment) return null;
 
-  const { visitorId, purpose, date, hostName, status, _id, pass } = appointment;
+  const { visitorId, whomToMeet, purpose, date, hostName, status, _id, pass } = appointment;
 
   const getStatusColor = (status) => {
     const colors = {
@@ -93,7 +93,7 @@ const AppointmentDetailsModal = ({ open, onClose, appointment }) => {
               <DetailRow
                 icon={<FileText className="w-5 h-5 text-gray-400" />}
                 label="Whom To Meet"
-                value={hostName}
+                value={whomToMeet}
               />
               <DetailRow
                 icon={<FileText className="w-5 h-5 text-gray-400" />}
