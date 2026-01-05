@@ -56,7 +56,7 @@ const EmployeeDashboard = () => {
       <div className="bg-white rounded-lg shadow p-4">
         <h2 className="text-lg font-semibold mb-4">My Appointments</h2>
 
-        <AppointmentsTable role="EMPLOYEE" />
+        <AppointmentsTable />
       </div>
 
       {/* CREATE MODAL */}
