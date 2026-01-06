@@ -66,22 +66,16 @@ export const AppointmentsProvider = ({ children }) => {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // 🔐 logged-in user
   const user = JSON.parse(localStorage.getItem("user"));
-
-  /* ---------------- FETCH APPOINTMENTS ---------------- */
 
   const fetchAppointments = async () => {
     try {
       setLoading(true);
-
       let res;
 
-      // ✅ ROLE-BASED FETCH
       if (user?.role === "ADMIN") {
         res = await api.get("/appointments/all");
       } else {
-        // EMPLOYEE → only own appointments
         res = await api.get("/appointments");
       }
 
@@ -93,16 +87,13 @@ export const AppointmentsProvider = ({ children }) => {
     }
   };
 
-  /* ---------------- UPDATE STATUS ---------------- */
-
   const updateStatus = async (id, status) => {
     try {
       await api.put(`/appointments/${id}/status`, { status });
 
-      // 🔹 optimistic update (no refetch needed)
       setAppointments((prev) =>
         prev.map((a) =>
-          a._id === id ? { ...a, status: status.toUpperCase() } : a
+          a._id === id ? { ...a, status: status.toLowerCase() } : a
         )
       );
     } catch (err) {
@@ -114,13 +105,11 @@ export const AppointmentsProvider = ({ children }) => {
     fetchAppointments();
   }, []);
 
-  /* ---------------- DERIVED STATS ---------------- */
-
   const stats = {
     total: appointments.length,
-    pending: appointments.filter((a) => a.status === "PENDING").length,
-    approved: appointments.filter((a) => a.status === "APPROVED").length,
-    rejected: appointments.filter((a) => a.status === "REJECTED").length,
+    pending: appointments.filter((a) => a.status === "pending").length,
+    approved: appointments.filter((a) => a.status === "approved").length,
+    rejected: appointments.filter((a) => a.status === "rejected").length,
     inside: appointments.filter((a) => a.visitorId?.isInside).length,
   };
 

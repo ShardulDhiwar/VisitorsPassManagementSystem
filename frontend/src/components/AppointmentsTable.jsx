@@ -73,22 +73,25 @@ const AppointmentsTable = () => {
                       onClick={() => openDetails(item)}
                       title="View details"
                     >
-                      <Eye className="text-black" size={18} />
+                      <Eye
+                        className="text-black hover: cursor-pointer"
+                        size={18}
+                      />
                     </button>
 
-                    {/* ✅❌ ACTIONS (only pending) */}
+                    {/* ACTIONS (only pending) */}
                     {status === "PENDING" && (
                       <>
                         <button
                           onClick={() => updateStatus(item._id, "approved")}
                         >
-                          <Check className="text-green-500" />
+                          <Check className="text-green-500 hover: cursor-pointer" />
                         </button>
 
                         <button
                           onClick={() => updateStatus(item._id, "rejected")}
                         >
-                          <X className="text-red-500" />
+                          <X className="text-red-500 hover: cursor-pointer" />
                         </button>
                       </>
                     )}

@@ -203,7 +203,14 @@ export const createAppointment = async (req, res) => {
             date,
         } = req.body;
 
-        // Create / reuse visitor
+        if (!name || !phone || !email || !purpose || !date) {
+            return res.status(400).json({
+                success: false,
+                message: "All required fields must be provided",
+            });
+        }
+
+        // 🔹 Create or reuse visitor
         let visitor = await Visitor.findOne({ email });
 
         if (!visitor) {
@@ -219,8 +226,8 @@ export const createAppointment = async (req, res) => {
             purpose,
             whomToMeet,
             date,
-            hostId: req.user._id,      // 🔐 from token
-            hostName: req.user.name,   // 🔐 from token
+            hostId: req.user._id,     // 🔐 from token
+            hostName: req.user.name,  // 🔐 from token
             status: "pending",
         });
 
@@ -229,6 +236,7 @@ export const createAppointment = async (req, res) => {
             data: appointment,
         });
     } catch (error) {
+        console.error("Create appointment error:", error);
         res.status(500).json({
             success: false,
             message: error.message,
@@ -257,6 +265,7 @@ export const getAppointmentByHost = async (req, res) => {
             data: list,
         });
     } catch (error) {
+        console.error("Get appointments error:", error);
         res.status(500).json({
             success: false,
             message: error.message,
@@ -280,6 +289,7 @@ export const getAppointmentByVisitor = async (req, res) => {
             data: list,
         });
     } catch (error) {
+        console.error("Get visitor appointments error:", error);
         res.status(500).json({
             success: false,
             message: error.message,
@@ -301,6 +311,7 @@ export const getAllAppointments = async (req, res) => {
             data: list,
         });
     } catch (error) {
+        console.error("Admin get all appointments error:", error);
         res.status(500).json({
             success: false,
             message: error.message,
@@ -315,6 +326,13 @@ export const updateAppointmentStatus = async (req, res) => {
     try {
         const { id } = req.params;
         const { status } = req.body;
+
+        if (!status) {
+            return res.status(400).json({
+                success: false,
+                message: "Status is required",
+            });
+        }
 
         const appointment = await Appointment.findById(id);
 
@@ -332,7 +350,7 @@ export const updateAppointmentStatus = async (req, res) => {
         ) {
             return res.status(403).json({
                 success: false,
-                message: "Not authorized",
+                message: "You can update only your own appointments",
             });
         }
 
@@ -344,6 +362,7 @@ export const updateAppointmentStatus = async (req, res) => {
             data: appointment,
         });
     } catch (error) {
+        console.error("Update appointment status error:", error);
         res.status(500).json({
             success: false,
             message: error.message,
