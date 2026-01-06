@@ -1,224 +1,215 @@
 // import Appointment from "../models/appointmentModel.js";
 // import Visitor from "../models/visitorModel.js";
-// import Pass from "../models/passModel.js";
-// import { randomBytes } from "crypto";
 
-// const generateToken = () => randomBytes(16).toString("hex");
-
-// // CREATE APPOINTMENT (INVITE)
-
+// /**
+//  * EMPLOYEE → Create appointment
+//  */
 // export const createAppointment = async (req, res) => {
 //     try {
 //         const {
-//             visitorId,
 //             name,
 //             phone,
 //             email,
 //             purpose,
 //             whomToMeet,
 //             date,
-//             hostId,
-//             hostName
 //         } = req.body;
 
-//         let visitor;
-
-//         // -----------------------------------------------------
-//         // IF visitorId provided → use existing visitor
-//         // -----------------------------------------------------
-//         if (visitorId) {
-//             visitor = await Visitor.findById(visitorId);
-
-//             if (!visitor) {
-//                 return res.status(404).json({
-//                     success: false,
-//                     message: "Visitor not found"
-//                 });
-//             }
+//         if (!name || !phone || !email || !purpose || !date) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "All required fields must be provided",
+//             });
 //         }
 
-//         // -----------------------------------------------------
-//         // IF NO visitorId → auto-create NEW visitor
-//         // -----------------------------------------------------
-//         else {
+//         // 🔹 Create or reuse visitor
+//         let visitor = await Visitor.findOne({ email });
+
+//         if (!visitor) {
 //             visitor = await Visitor.create({
 //                 name,
 //                 phone,
 //                 email,
-//                 purpose,
-//                 whomToMeet
 //             });
 //         }
 
-//         // -----------------------------------------------------
-//         // Create appointment (pending)
-//         // -----------------------------------------------------
 //         const appointment = await Appointment.create({
 //             visitorId: visitor._id,
 //             purpose,
 //             whomToMeet,
 //             date,
-//             hostId,
-//             hostName,
-//             status: "pending"
+//             hostId: req.user._id,     // 🔐 from token
+//             hostName: req.user.name,  // 🔐 from token
+//             status: "pending",
 //         });
-
-//         // Link appointment to visitor for future use
-//         visitor.appointmentId = appointment._id;
-//         await visitor.save();
 
 //         res.status(201).json({
 //             success: true,
-//             message: "Appointment created (Visitor handled automatically)",
-//             data: {
-//                 visitor,
-//                 appointment
-//             }
+//             data: appointment,
 //         });
-
 //     } catch (error) {
-//         res.status(400).json({ success: false, message: error.message });
+//         console.error("Create appointment error:", error);
+//         res.status(500).json({
+//             success: false,
+//             message: error.message,
+//         });
 //     }
 // };
 
-// // GET ALL APPOINTMENTS (Optional filter by hostId)
-
+// /**
+//  * EMPLOYEE → only OWN appointments
+//  * ADMIN → ALL appointments
+//  */
 // export const getAppointmentByHost = async (req, res) => {
 //     try {
-//         const { hostId } = req.query;
+//         let filter = {};
 
-//         const filter = hostId ? { hostId } : {};
+//         if (req.user.role === "EMPLOYEE") {
+//             filter.hostId = req.user._id;
+//         }
 
 //         const list = await Appointment.find(filter)
-//             .populate("visitorId");
+//             .populate("visitorId")
+//             .sort({ createdAt: -1 });
 
-//         res.json({ success: true, data: list });
-
+//         res.status(200).json({
+//             success: true,
+//             data: list,
+//         });
 //     } catch (error) {
-//         res.status(500).json({ success: false, message: error.message });
+//         console.error("Get appointments error:", error);
+//         res.status(500).json({
+//             success: false,
+//             message: error.message,
+//         });
 //     }
 // };
 
-// // GET APPOINTMENTS BY VISITOR ID
-
+// /**
+//  * Get appointments for a visitor
+//  */
 // export const getAppointmentByVisitor = async (req, res) => {
 //     try {
-//         const visitorId = req.params.visitorId;
+//         const { visitorId } = req.params;
 
 //         const list = await Appointment.find({ visitorId })
-//             .populate("visitorId");
+//             .populate("visitorId")
+//             .sort({ createdAt: -1 });
 
-//         res.json({ success: true, data: list });
-//     } catch (error) {
-//         res.status(500).json({ success: false, message: error.message });
-//     }
-// };
-
-
-// // UPDATE STATUS → APPROVE / REJECT
-
-// export const updateAppointmentStatus = async (req, res) => {
-//     try {
-//         const { status } = req.body;
-
-//         const appointment = await Appointment.findById(req.params.id)
-//             .populate("visitorId");
-
-//         if (!appointment) {
-//             return res.status(404).json({ success: false, message: "Appointment not found" });
-//         }
-
-//         // Update appointment status
-//         appointment.status = status;
-//         await appointment.save();
-
-//         // AUTO-ISSUE PASS IF APPROVED
-//         if (status === "approved") {
-//             const token = generateToken();
-
-//             // Create a pass entry
-//             const pass = await Pass.create({
-//                 visitorId: appointment.visitorId._id,
-//                 appointmentId: appointment._id,
-//                 token,
-//                 issuedBy: "system-auto"
-//             });
-
-//             // Update visitor with passToken
-//             await Visitor.findByIdAndUpdate(appointment.visitorId._id, {
-//                 passToken: token
-//             });
-
-//             return res.json({
-//                 success: true,
-//                 message: "Appointment approved. Pass issued automatically.",
-//                 appointment,
-//                 pass
-//             });
-//         }
-
-//         // If rejected
-//         res.json({
+//         res.status(200).json({
 //             success: true,
-//             message: `Appointment ${status}`,
-//             data: appointment
+//             data: list,
 //         });
-
 //     } catch (error) {
-//         res.status(400).json({ success: false, message: error.message });
+//         console.error("Get visitor appointments error:", error);
+//         res.status(500).json({
+//             success: false,
+//             message: error.message,
+//         });
 //     }
 // };
 
-
-
-
-// // GET ALL (ADMIN)
-
+// /**
+//  * ADMIN ONLY → Get all appointments
+//  */
 // export const getAllAppointments = async (req, res) => {
 //     try {
-//         const list = await Appointment.find().populate("visitorId");
+//         const list = await Appointment.find()
+//             .populate("visitorId")
+//             .sort({ createdAt: -1 });
 
-//         res.json({ success: true, data: list });
-
+//         res.status(200).json({
+//             success: true,
+//             data: list,
+//         });
 //     } catch (error) {
-//         res.status(500).json({ success: false, message: error.message });
+//         console.error("Admin get all appointments error:", error);
+//         res.status(500).json({
+//             success: false,
+//             message: error.message,
+//         });
 //     }
 // };
 
+// /**
+//  * ADMIN + EMPLOYEE → Approve / Reject
+//  */
+// export const updateAppointmentStatus = async (req, res) => {
+//     try {
+//         const { id } = req.params;
+//         const { status } = req.body;
+
+//         if (!status) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Status is required",
+//             });
+//         }
+
+//         const appointment = await Appointment.findById(id);
+
+//         if (!appointment) {
+//             return res.status(404).json({
+//                 success: false,
+//                 message: "Appointment not found",
+//             });
+//         }
+
+//         // 🔐 Employee can update ONLY own appointments
+//         if (
+//             req.user.role === "EMPLOYEE" &&
+//             appointment.hostId.toString() !== req.user._id.toString()
+//         ) {
+//             return res.status(403).json({
+//                 success: false,
+//                 message: "You can update only your own appointments",
+//             });
+//         }
+
+//         appointment.status = status.toLowerCase();
+//         await appointment.save();
+
+//         res.status(200).json({
+//             success: true,
+//             data: appointment,
+//         });
+//     } catch (error) {
+//         console.error("Update appointment status error:", error);
+//         res.status(500).json({
+//             success: false,
+//             message: error.message,
+//         });
+//     }
+// };
 
 import Appointment from "../models/appointmentModel.js";
 import Visitor from "../models/visitorModel.js";
+import Pass from "../models/passModel.js";
+import crypto from "crypto";
 
-/**
- * EMPLOYEE → Create appointment
- */
+import {
+    sendPassEmail,
+    sendRejectionEmail,
+} from "../utils/sendPassEmail.js";
+
+/* ======================================================
+   EMPLOYEE → Create Appointment
+====================================================== */
 export const createAppointment = async (req, res) => {
     try {
-        const {
-            name,
-            phone,
-            email,
-            purpose,
-            whomToMeet,
-            date,
-        } = req.body;
+        const { name, phone, email, purpose, whomToMeet, date } = req.body;
 
-        if (!name || !phone || !email || !purpose || !date) {
+        if (!name || !phone || !email || !purpose || !whomToMeet || !date) {
             return res.status(400).json({
                 success: false,
-                message: "All required fields must be provided",
+                message: "All fields are required",
             });
         }
 
-        // 🔹 Create or reuse visitor
+        // Create or reuse visitor
         let visitor = await Visitor.findOne({ email });
-
         if (!visitor) {
-            visitor = await Visitor.create({
-                name,
-                phone,
-                email,
-            });
+            visitor = await Visitor.create({ name, phone, email });
         }
 
         const appointment = await Appointment.create({
@@ -226,8 +217,8 @@ export const createAppointment = async (req, res) => {
             purpose,
             whomToMeet,
             date,
-            hostId: req.user._id,     // 🔐 from token
-            hostName: req.user.name,  // 🔐 from token
+            hostId: req.user._id,
+            hostName: req.user.name,
             status: "pending",
         });
 
@@ -244,17 +235,14 @@ export const createAppointment = async (req, res) => {
     }
 };
 
-/**
- * EMPLOYEE → only OWN appointments
- * ADMIN → ALL appointments
- */
+/* ======================================================
+   EMPLOYEE → only own appointments
+   ADMIN → all appointments
+====================================================== */
 export const getAppointmentByHost = async (req, res) => {
     try {
-        let filter = {};
-
-        if (req.user.role === "EMPLOYEE") {
-            filter.hostId = req.user._id;
-        }
+        const filter =
+            req.user.role === "EMPLOYEE" ? { hostId: req.user._id } : {};
 
         const list = await Appointment.find(filter)
             .populate("visitorId")
@@ -273,13 +261,12 @@ export const getAppointmentByHost = async (req, res) => {
     }
 };
 
-/**
- * Get appointments for a visitor
- */
+/* ======================================================
+   Get appointments for a visitor
+====================================================== */
 export const getAppointmentByVisitor = async (req, res) => {
     try {
         const { visitorId } = req.params;
-
         const list = await Appointment.find({ visitorId })
             .populate("visitorId")
             .sort({ createdAt: -1 });
@@ -297,9 +284,9 @@ export const getAppointmentByVisitor = async (req, res) => {
     }
 };
 
-/**
- * ADMIN ONLY → Get all appointments
- */
+/* ======================================================
+   ADMIN ONLY → Get all appointments
+====================================================== */
 export const getAllAppointments = async (req, res) => {
     try {
         const list = await Appointment.find()
@@ -319,9 +306,9 @@ export const getAllAppointments = async (req, res) => {
     }
 };
 
-/**
- * ADMIN + EMPLOYEE → Approve / Reject
- */
+/* ======================================================
+   ADMIN + EMPLOYEE → Approve / Reject Appointment
+====================================================== */
 export const updateAppointmentStatus = async (req, res) => {
     try {
         const { id } = req.params;
@@ -334,8 +321,15 @@ export const updateAppointmentStatus = async (req, res) => {
             });
         }
 
-        const appointment = await Appointment.findById(id);
+        const normalizedStatus = status.toLowerCase();
+        if (!["approved", "rejected"].includes(normalizedStatus)) {
+            return res.status(400).json({
+                success: false,
+                message: "Status must be 'approved' or 'rejected'",
+            });
+        }
 
+        const appointment = await Appointment.findById(id).populate("visitorId");
         if (!appointment) {
             return res.status(404).json({
                 success: false,
@@ -343,7 +337,7 @@ export const updateAppointmentStatus = async (req, res) => {
             });
         }
 
-        // 🔐 Employee can update ONLY own appointments
+        // Employee can update only own appointments
         if (
             req.user.role === "EMPLOYEE" &&
             appointment.hostId.toString() !== req.user._id.toString()
@@ -354,8 +348,44 @@ export const updateAppointmentStatus = async (req, res) => {
             });
         }
 
-        appointment.status = status.toLowerCase();
+        // Update appointment status
+        appointment.status = normalizedStatus;
         await appointment.save();
+
+        // ✅ APPROVED FLOW → Create pass + QR + Email
+        if (normalizedStatus === "approved") {
+            const existingPass = await Pass.findOne({ appointmentId: appointment._id });
+
+            if (!existingPass) {
+                const token = crypto.randomBytes(16).toString("hex");
+
+                const pass = await Pass.create({
+                    appointmentId: appointment._id,
+                    visitorId: appointment.visitorId._id,
+                    token,
+                });
+
+                await sendPassEmail({
+                    to: appointment.visitorId.email,
+                    visitorName: appointment.visitorId.name,
+                    hostName: appointment.hostName,
+                    date: appointment.date,
+                    purpose: appointment.purpose,
+                    passToken: token,
+                });
+            }
+        }
+
+        // ✅ REJECTED FLOW → Send rejection email
+        if (normalizedStatus === "rejected") {
+            await sendRejectionEmail({
+                to: appointment.visitorId.email,
+                visitorName: appointment.visitorId.name,
+                hostName: appointment.hostName,
+                date: appointment.date,
+                purpose: appointment.purpose,
+            });
+        }
 
         res.status(200).json({
             success: true,
