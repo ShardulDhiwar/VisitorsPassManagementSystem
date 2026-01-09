@@ -187,10 +187,6 @@ import Visitor from "../models/visitorModel.js";
 import Pass from "../models/passModel.js";
 import crypto from "crypto";
 
-import {
-    sendPassEmail,
-    sendRejectionEmail,
-} from "../utils/sendPassEmail.js";
 
 /* ======================================================
    EMPLOYEE → Create Appointment
@@ -314,22 +310,17 @@ export const updateAppointmentStatus = async (req, res) => {
         const { id } = req.params;
         const { status } = req.body;
 
-        if (!status) {
-            return res.status(400).json({
-                success: false,
-                message: "Status is required",
-            });
-        }
-
         const normalizedStatus = status.toLowerCase();
         if (!["approved", "rejected"].includes(normalizedStatus)) {
             return res.status(400).json({
                 success: false,
-                message: "Status must be 'approved' or 'rejected'",
+                message: "Status must be approved or rejected",
             });
         }
 
-        const appointment = await Appointment.findById(id).populate("visitorId");
+        const appointment = await Appointment.findById(id)
+            .populate("visitorId");
+
         if (!appointment) {
             return res.status(404).json({
                 success: false,
@@ -337,65 +328,50 @@ export const updateAppointmentStatus = async (req, res) => {
             });
         }
 
-        // Employee can update only own appointments
+        // EMPLOYEE safety check
         if (
             req.user.role === "EMPLOYEE" &&
             appointment.hostId.toString() !== req.user._id.toString()
         ) {
             return res.status(403).json({
                 success: false,
-                message: "You can update only your own appointments",
+                message: "Unauthorized",
             });
         }
 
-        // Update appointment status
         appointment.status = normalizedStatus;
         await appointment.save();
 
-        // ✅ APPROVED FLOW → Create pass + QR + Email
-        if (normalizedStatus === "approved") {
-            const existingPass = await Pass.findOne({ appointmentId: appointment._id });
+        let pass = null;
 
-            if (!existingPass) {
+        // ✅ If approved → create pass
+        if (normalizedStatus === "approved") {
+            pass = await Pass.findOne({ appointmentId: appointment._id });
+
+            if (!pass) {
                 const token = crypto.randomBytes(16).toString("hex");
 
-                const pass = await Pass.create({
+                pass = await Pass.create({
                     appointmentId: appointment._id,
                     visitorId: appointment.visitorId._id,
                     token,
                 });
-
-                await sendPassEmail({
-                    to: appointment.visitorId.email,
-                    visitorName: appointment.visitorId.name,
-                    hostName: appointment.hostName,
-                    date: appointment.date,
-                    purpose: appointment.purpose,
-                    passToken: token,
-                });
             }
-        }
-
-        // ✅ REJECTED FLOW → Send rejection email
-        if (normalizedStatus === "rejected") {
-            await sendRejectionEmail({
-                to: appointment.visitorId.email,
-                visitorName: appointment.visitorId.name,
-                hostName: appointment.hostName,
-                date: appointment.date,
-                purpose: appointment.purpose,
-            });
         }
 
         res.status(200).json({
             success: true,
-            data: appointment,
+            data: {
+                appointment,
+                pass, // 👈 frontend will use this for EmailJS
+            },
         });
     } catch (error) {
-        console.error("Update appointment status error:", error);
+        console.error(error);
         res.status(500).json({
             success: false,
             message: error.message,
         });
     }
 };
+
