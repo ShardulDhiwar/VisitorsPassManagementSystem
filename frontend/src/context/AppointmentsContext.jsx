@@ -59,6 +59,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import api from "../api/axios";
+import { sendApprovedEmail, sendRejectedEmail } from "../utils/emailjs";
 
 const AppointmentsContext = createContext();
 
@@ -68,6 +69,9 @@ export const AppointmentsProvider = ({ children }) => {
 
   const user = JSON.parse(localStorage.getItem("user"));
 
+  /* =========================
+     FETCH APPOINTMENTS
+  ========================== */
   const fetchAppointments = async () => {
     try {
       setLoading(true);
@@ -87,14 +91,42 @@ export const AppointmentsProvider = ({ children }) => {
     }
   };
 
+  /* =========================
+     UPDATE STATUS + EMAIL
+  ========================== */
   const updateStatus = async (id, status) => {
     try {
-      await api.put(`/appointments/${id}/status`, { status });
+      // 1️⃣ Update status in backend
+      const res = await api.put(`/appointments/${id}/status`, { status });
 
+      const { appointment, pass } = res.data.data;
+
+      // 2️⃣ APPROVED → send pass email
+      if (status === "approved" && pass) {
+        await sendApprovedEmail({
+          to_email: appointment.visitorId.email,
+          visitor_name: appointment.visitorId.name,
+          host_name: appointment.hostName,
+          date: new Date(appointment.date).toLocaleString(),
+          purpose: appointment.purpose,
+          pass_token: pass.token,
+        });
+      }
+
+      // 3️⃣ REJECTED → send rejection email
+      if (status === "rejected") {
+        await sendRejectedEmail({
+          to_email: appointment.visitorId.email,
+          visitor_name: appointment.visitorId.name,
+          host_name: appointment.hostName,
+          date: new Date(appointment.date).toLocaleString(),
+          purpose: appointment.purpose,
+        });
+      }
+
+      // 4️⃣ Update UI state
       setAppointments((prev) =>
-        prev.map((a) =>
-          a._id === id ? { ...a, status: status.toLowerCase() } : a
-        )
+        prev.map((a) => (a._id === id ? { ...a, status } : a))
       );
     } catch (err) {
       console.error("Status update failed", err);
@@ -105,6 +137,9 @@ export const AppointmentsProvider = ({ children }) => {
     fetchAppointments();
   }, []);
 
+  /* =========================
+     STATS
+  ========================== */
   const stats = {
     total: appointments.length,
     pending: appointments.filter((a) => a.status === "pending").length,
@@ -129,4 +164,5 @@ export const AppointmentsProvider = ({ children }) => {
 };
 
 export const useAppointments = () => useContext(AppointmentsContext);
+
 
