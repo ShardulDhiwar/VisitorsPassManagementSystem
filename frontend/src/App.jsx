@@ -11,10 +11,6 @@ import LogsPage from "./components/LogsPage.jsx"
 import SecurityDashboard from './mydashboards/security/SecurityDashboard.jsx'
 import EmployeeDashboard from "./mydashboards/employees/EmployeeDashboard.jsx";
 
-// Dummy pages
-
-
-
 
 function App() {
   return (
