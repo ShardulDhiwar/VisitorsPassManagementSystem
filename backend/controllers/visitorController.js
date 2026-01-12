@@ -16,7 +16,7 @@ export const registerVisitor = async (req, res) => {
         const appointment = await Appointment.create({
             visitorId: visitor._id,
             purpose: req.body.purpose,
-            hostName: req.body.whomToMeet,
+            whomToMeet: req.body.whomToMeet,
             date: req.body.date || new Date(),
             status: "pending"
         });

@@ -46,7 +46,7 @@ const router = express.Router();
 router.post(
     "/invite",
     protect,
-    requireRole("EMPLOYEE"),
+    requireRole("ADMIN","EMPLOYEE"),
     createAppointment
 );
 

@@ -29,12 +29,12 @@ const appointmentSchema = new mongoose.Schema(
         hostId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
-            required: true,
+            default: null,
         },
 
         hostName: {
             type: String,
-            required: true,
+            default: null,
         },
 
         status: {
