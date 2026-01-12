@@ -2,12 +2,14 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../api/axios";
+import { useAppointments } from "../context/AppointmentsContext"; // ✅ added
 
 import LoginSVG from "../assets/LoginSVG.png";
 import GateKeeper from "../assets/GateKeeper.png";
 import GateKeeperWhite from "../assets/GateKeeperWhite.png";
 
 const VisitorForm = () => {
+  const { refetch } = useAppointments(); // 🔥 CONTEXT REFRESH
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -31,6 +33,9 @@ const VisitorForm = () => {
 
     try {
       await api.post("/visitors/register", formData);
+
+      // 🔥 THIS IS THE REFRESH FIX
+      await refetch();
 
       toast.success(
         <div>
@@ -136,7 +141,6 @@ const VisitorForm = () => {
               {loading ? "Submitting..." : "Request Appointment"}
             </button>
           </form>
-
         </div>
       </div>
 
@@ -192,3 +196,127 @@ const VisitorForm = () => {
 };
 
 export default VisitorForm;
+
+// import { useState } from "react";
+// import api from "../api/axios";
+// import { toast } from "react-toastify";
+// import { useAppointments } from "../context/AppointmentsContext";
+
+// const VisitorsForm = () => {
+//   const { refetch } = useAppointments(); // 🔥 CONTEXT REFRESH
+//   const [loading, setLoading] = useState(false);
+
+//   const [formData, setFormData] = useState({
+//     name: "",
+//     phone: "",
+//     email: "",
+//     purpose: "",
+//     whomToMeet: "",
+//   });
+
+//   const handleChange = (e) => {
+//     setFormData({
+//       ...formData,
+//       [e.target.name]: e.target.value,
+//     });
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+
+//     try {
+//       setLoading(true);
+
+//       await api.post("/visitors/register", formData);
+
+//       // 🔥 THIS FIXES THE REFRESH ISSUE
+//       await refetch();
+
+//       toast.success(
+//         <div>
+//           <p className="font-semibold">Appointment request submitted</p>
+//           <p className="text-sm">
+//             You will receive your QR pass after approval.
+//           </p>
+//         </div>
+//       );
+
+//       // Reset form
+//       setFormData({
+//         name: "",
+//         phone: "",
+//         email: "",
+//         purpose: "",
+//         whomToMeet: "",
+//       });
+//     } catch (err) {
+//       toast.error(err.response?.data?.message || "Something went wrong");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <div className="max-w-xl mx-auto p-6 bg-white shadow rounded">
+//       <h2 className="text-xl font-bold mb-4">Visitor Registration</h2>
+
+//       <form onSubmit={handleSubmit} className="space-y-4">
+//         <input
+//           name="name"
+//           value={formData.name}
+//           onChange={handleChange}
+//           placeholder="Visitor Name"
+//           required
+//           className="w-full p-2 border rounded"
+//         />
+
+//         <input
+//           name="phone"
+//           value={formData.phone}
+//           onChange={handleChange}
+//           placeholder="Phone"
+//           required
+//           className="w-full p-2 border rounded"
+//         />
+
+//         <input
+//           name="email"
+//           value={formData.email}
+//           onChange={handleChange}
+//           placeholder="Email"
+//           type="email"
+//           required
+//           className="w-full p-2 border rounded"
+//         />
+
+//         <input
+//           name="purpose"
+//           value={formData.purpose}
+//           onChange={handleChange}
+//           placeholder="Purpose of Visit"
+//           required
+//           className="w-full p-2 border rounded"
+//         />
+
+//         <input
+//           name="whomToMeet"
+//           value={formData.whomToMeet}
+//           onChange={handleChange}
+//           placeholder="Whom to meet (e.g. Manager, HR)"
+//           required
+//           className="w-full p-2 border rounded"
+//         />
+
+//         <button
+//           type="submit"
+//           disabled={loading}
+//           className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+//         >
+//           {loading ? "Submitting..." : "Submit"}
+//         </button>
+//       </form>
+//     </div>
+//   );
+// };
+
+// export default VisitorsForm;

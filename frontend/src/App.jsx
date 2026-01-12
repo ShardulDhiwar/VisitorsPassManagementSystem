@@ -7,70 +7,67 @@ import VisitorsForm from "./pages/VisitorsForm";
 import { ToastContainer } from "react-toastify";
 import { AppointmentsProvider } from "./context/AppointmentsContext";
 import UsersPage from "./components/UserPage.jsx";
-import LogsPage from "./components/LogsPage.jsx"
-import SecurityDashboard from './mydashboards/security/SecurityDashboard.jsx'
+import LogsPage from "./components/LogsPage.jsx";
+import SecurityDashboard from "./mydashboards/security/SecurityDashboard.jsx";
 import EmployeeDashboard from "./mydashboards/employees/EmployeeDashboard.jsx";
-
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* PUBLIC */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/visitorsForm" element={<VisitorsForm />} />
+    <AppointmentsProvider>
+      {" "}
+      {/* ✅ Wrap whole app */}
+      <BrowserRouter>
+        <Routes>
+          {/* PUBLIC */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/visitorsForm" element={<VisitorsForm />} />
 
-        {/* ADMIN */}
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute allowedRoles={["ADMIN"]}>
-              <AppointmentsProvider>
+          {/* ADMIN */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute allowedRoles={["ADMIN"]}>
                 <DashboardLayout />
-              </AppointmentsProvider>
-            </ProtectedRoute>
-          }
-        >
-          <Route index element={<AdminDashboard />} />
-          <Route path="users" element={<UsersPage />} />
-          <Route path="logs" element={<LogsPage />} />
-        </Route>
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<AdminDashboard />} />
+            <Route path="users" element={<UsersPage />} />
+            <Route path="logs" element={<LogsPage />} />
+          </Route>
 
-        {/* SECURITY */}
-        <Route
-          path="/security"
-          element={
-            <ProtectedRoute allowedRoles={["SECURITY"]}>
-              <AppointmentsProvider>
+          {/* SECURITY */}
+          <Route
+            path="/security"
+            element={
+              <ProtectedRoute allowedRoles={["SECURITY"]}>
                 <DashboardLayout />
-              </AppointmentsProvider>
-            </ProtectedRoute>
-          }
-        >
-          <Route index element={<SecurityDashboard />} />
-          <Route path="logs" element={<LogsPage />} />
-        </Route>
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<SecurityDashboard />} />
+            <Route path="logs" element={<LogsPage />} />
+          </Route>
 
-        {/* EMPLOYEE */}
-        <Route
-          path="/employee"
-          element={
-            <ProtectedRoute allowedRoles={["EMPLOYEE"]}>
-              <AppointmentsProvider>
+          {/* EMPLOYEE */}
+          <Route
+            path="/employee"
+            element={
+              <ProtectedRoute allowedRoles={["EMPLOYEE"]}>
                 <DashboardLayout />
-              </AppointmentsProvider>
-            </ProtectedRoute>
-          }
-        >
-          <Route index element={<EmployeeDashboard />} />
-        </Route>
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<EmployeeDashboard />} />
+          </Route>
 
-        {/* FALLBACK */}
-        <Route path="*" element={<LoginPage />} />
-      </Routes>
+          {/* FALLBACK */}
+          <Route path="*" element={<LoginPage />} />
+        </Routes>
 
-      <ToastContainer position="top-right" autoClose={2000} />
-    </BrowserRouter>
+        <ToastContainer position="top-right" autoClose={2000} />
+      </BrowserRouter>
+    </AppointmentsProvider>
   );
 }
 
