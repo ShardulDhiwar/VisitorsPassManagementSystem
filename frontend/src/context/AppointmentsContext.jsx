@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import api from "../api/axios";
 import { generateQrBase64 } from "../utils/qr";
 import { sendApprovedEmail, sendRejectedEmail } from "../utils/emailjs";
@@ -11,24 +11,31 @@ export const AppointmentsProvider = ({ children }) => {
 
   const user = JSON.parse(localStorage.getItem("user"));
 
+  // 🔁 prevent overlapping API calls
+  const isFetching = useRef(false);
+
   /* =========================
      FETCH APPOINTMENTS
   ========================== */
   const fetchAppointments = async () => {
-    try {
-      setLoading(true);
-      let res;
+    if (isFetching.current) return;
 
+    try {
+      isFetching.current = true;
+      setLoading(true);
+
+      let res;
       if (user?.role === "ADMIN") {
         res = await api.get("/appointments/all");
       } else {
         res = await api.get("/appointments");
       }
 
-      setAppointments(res.data.data);
+      setAppointments(res.data.data || []);
     } catch (err) {
       console.error("Failed to fetch appointments", err);
     } finally {
+      isFetching.current = false;
       setLoading(false);
     }
   };
@@ -53,7 +60,7 @@ export const AppointmentsProvider = ({ children }) => {
           date: new Date(appointment.date).toLocaleString(),
           purpose: appointment.purpose,
           pass_token: pass.token,
-          qr_image: qrImage, 
+          qr_image: qrImage,
         });
       }
 
@@ -68,18 +75,28 @@ export const AppointmentsProvider = ({ children }) => {
         });
       }
 
-      // Update UI
+      // Optimistic UI update
       setAppointments((prev) =>
-        prev.map((a) => (a._id === id ? { ...a, status } : a))
+        prev.map((a) =>
+          a._id === id ? { ...a, status } : a
+        )
       );
     } catch (err) {
       console.error("Status update failed", err);
     }
   };
 
-
+  /* =========================
+     🔁 POLLING (NO WEBSOCKETS)
+  ========================== */
   useEffect(() => {
-    fetchAppointments();
+    fetchAppointments(); // initial load
+
+    const interval = setInterval(() => {
+      fetchAppointments();
+    }, 5000); // ⏱ every 5 seconds
+
+    return () => clearInterval(interval);
   }, []);
 
   /* =========================
@@ -100,7 +117,7 @@ export const AppointmentsProvider = ({ children }) => {
         loading,
         stats,
         updateStatus,
-        refetch: fetchAppointments,
+        refetch: fetchAppointments, // manual refresh if needed
       }}
     >
       {children}
@@ -109,5 +126,3 @@ export const AppointmentsProvider = ({ children }) => {
 };
 
 export const useAppointments = () => useContext(AppointmentsContext);
-
-
