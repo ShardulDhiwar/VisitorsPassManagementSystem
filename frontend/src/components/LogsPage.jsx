@@ -1,4 +1,3 @@
-// 
 import { useEffect, useMemo, useState } from "react";
 import StatCard from "./StatsCard";
 import api from "../api/axios";
@@ -8,31 +7,18 @@ import {
   DoorOpen,
   Download,
   Users,
+  Search,
+  Filter,
 } from "lucide-react";
 import { toast } from "react-toastify";
 
-/* ---------------- SMALL STAT CARD ---------------- */
-
-// const StatCard = ({ title, value, icon, color = "blue" }) => (
-//   <div className="p-5 rounded-xl shadow bg-white border-l-4 border-green-500">
-//     <div className="flex items-center gap-3">
-//       <div className="text-2xl">{icon}</div>
-//       <h3 className="text-gray-600 font-medium">{title}</h3>
-//     </div>
-//     <p className="text-3xl font-bold mt-3">{value}</p>
-//   </div>
-// );
-
-const ROWS_PER_PAGE = 5;
+const ROWS_PER_PAGE = 8;
 
 const LogsPage = () => {
   const [logs, setLogs] = useState([]);
   const [page, setPage] = useState(1);
-
   const [actionFilter, setActionFilter] = useState("ALL");
   const [search, setSearch] = useState("");
-
-  /* ---------------- FETCH ---------------- */
 
   const fetchLogs = async () => {
     try {
@@ -46,8 +32,6 @@ const LogsPage = () => {
   useEffect(() => {
     fetchLogs();
   }, []);
-
-  /* ---------------- FILTER + SEARCH ---------------- */
 
   const filteredLogs = useMemo(() => {
     return logs.filter((log) => {
@@ -63,16 +47,12 @@ const LogsPage = () => {
     });
   }, [logs, actionFilter, search]);
 
-  /* ---------------- PAGINATION ---------------- */
-
   const totalPages = Math.ceil(filteredLogs.length / ROWS_PER_PAGE);
   const startIndex = (page - 1) * ROWS_PER_PAGE;
   const currentLogs = filteredLogs.slice(
     startIndex,
     startIndex + ROWS_PER_PAGE
   );
-
-  /* ---------------- CSV DOWNLOAD ---------------- */
 
   const downloadCSV = () => {
     if (filteredLogs.length === 0) {
@@ -109,22 +89,26 @@ const LogsPage = () => {
     window.URL.revokeObjectURL(url);
   };
 
-  /* ---------------- STATS ---------------- */
-
   const totalLogs = logs.length;
   const checkIns = logs.filter((l) => l.action === "check-in").length;
   const checkOuts = logs.filter((l) => l.action === "check-out").length;
   const inside = Math.max(checkIns - checkOuts, 0);
 
-
-  /* ---------------- UI ---------------- */
-
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-semibold mb-6">Security Logs</h1>
+    <div className="p-6 space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold text-gray-800">Security Logs</h1>
+        <button
+          onClick={downloadCSV}
+          className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-2 rounded-lg transition-all duration-150 shadow-md hover:shadow-lg"
+        >
+          <Download size={18} />
+          Export CSV
+        </button>
+      </div>
 
-      {/* STATS CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           title="Total Logs"
           value={totalLogs}
@@ -144,107 +128,143 @@ const LogsPage = () => {
           bg="border-red-500"
         />
         <StatCard
-          title="Inside"
+          title="Currently Inside"
           value={inside}
           icon={<Users />}
           bg="border-orange-500"
         />
       </div>
 
-      {/* TABLE */}
-      <div className="bg-white p-4 rounded-xl shadow">
-        {/* TOP CONTROLS */}
-        <div className="flex flex-wrap gap-3 justify-between mb-4">
-          <div className="flex gap-2">
+      {/* Table Card */}
+      <div className="bg-white p-6 rounded-xl shadow-lg">
+        {/* Filters */}
+        <div className="flex flex-wrap gap-4 mb-6">
+          <div className="flex-1 min-w-[250px] relative">
+            <Search
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              size={20}
+            />
+            <input
+              placeholder="Search by name or token..."
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
+            />
+          </div>
+
+          <div className="relative">
+            <Filter
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              size={20}
+            />
             <select
               value={actionFilter}
               onChange={(e) => {
                 setActionFilter(e.target.value);
                 setPage(1);
               }}
-              className="border p-2 rounded"
+              className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150 appearance-none bg-white"
             >
-              <option value="ALL">All</option>
+              <option value="ALL">All Actions</option>
               <option value="check-in">Check-in</option>
               <option value="check-out">Check-out</option>
             </select>
-
-            <input
-              placeholder="Search name or token"
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setPage(1);
-              }}
-              className="border p-2 rounded"
-            />
           </div>
-
-          <button
-            onClick={downloadCSV}
-            className="flex items-center gap-2 border px-3 py-2 rounded hover:bg-gray-100"
-          >
-            <Download size={16} />
-            Download CSV
-          </button>
         </div>
 
-        {/* TABLE */}
-        <table className="w-full text-sm">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="p-3 text-left">Visitor</th>
-              <th>Action</th>
-              <th>Token</th>
-              <th>Done By</th>
-              <th>Time</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {currentLogs.map((log) => (
-              <tr key={log._id} className="border-b hover:bg-gray-50">
-                <td className="p-3">{log.visitorId?.name}</td>
-                <td>
-                  <span
-                    className={`px-2 py-1 rounded text-xs font-medium
-                      ${
-                        log.action === "check-in"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-red-100 text-red-700"
-                      }`}
-                  >
-                    {log.action}
-                  </span>
-                </td>
-                <td className="font-mono">{log.passId?.token}</td>
-                <td>{log.doneBy}</td>
-                <td className="text-gray-600">
-                  {new Date(log.createdAt).toLocaleString()}
-                </td>
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-50 border-b-2 border-gray-200">
+              <tr>
+                <th className="p-4 text-left font-semibold text-gray-700">
+                  Visitor
+                </th>
+                <th className="p-4 text-left font-semibold text-gray-700">
+                  Action
+                </th>
+                <th className="p-4 text-left font-semibold text-gray-700">
+                  Token
+                </th>
+                <th className="p-4 text-left font-semibold text-gray-700">
+                  Done By
+                </th>
+                <th className="p-4 text-left font-semibold text-gray-700">
+                  Time
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
 
-        {/* PAGINATION */}
-        <div className="flex justify-evenly items-center mt-4 text-sm">
+            <tbody>
+              {currentLogs.length > 0 ? (
+                currentLogs.map((log) => (
+                  <tr
+                    key={log._id}
+                    className="border-b hover:bg-gray-50 transition-colors duration-150"
+                  >
+                    <td className="p-4 font-medium text-gray-800">
+                      {log.visitorId?.name || "N/A"}
+                    </td>
+                    <td className="p-4">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-semibold inline-flex items-center gap-1 ${
+                          log.action === "check-in"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {log.action === "check-in" ? (
+                          <DoorOpen size={14} />
+                        ) : (
+                          <DoorClosed size={14} />
+                        )}
+                        {log.action}
+                      </span>
+                    </td>
+                    <td className="p-4 font-mono text-gray-600">
+                      {log.passId?.token || "N/A"}
+                    </td>
+                    <td className="p-4 text-gray-700">
+                      {log.doneBy || "System"}
+                    </td>
+                    <td className="p-4 text-gray-600">
+                      {new Date(log.createdAt).toLocaleString()}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="p-8 text-center text-gray-500">
+                    No logs found
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination */}
+        <div className="flex justify-between items-center mt-6 text-sm">
           <button
             onClick={() => setPage((p) => Math.max(p - 1, 1))}
             disabled={page === 1}
-            className="px-3 py-1 border rounded disabled:opacity-40"
+            className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors duration-150"
           >
             Previous
           </button>
 
-          <span>
-            Page <strong>{page}</strong> of <strong>{totalPages || 1}</strong>
+          <span className="text-gray-600">
+            Page <strong className="text-gray-800">{page}</strong> of{" "}
+            <strong className="text-gray-800">{totalPages || 1}</strong>
           </span>
 
           <button
             onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
             disabled={page === totalPages}
-            className="px-3 py-1 border rounded disabled:opacity-40"
+            className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors duration-150"
           >
             Next
           </button>
@@ -253,7 +273,5 @@ const LogsPage = () => {
     </div>
   );
 };
-
-
 
 export default LogsPage;

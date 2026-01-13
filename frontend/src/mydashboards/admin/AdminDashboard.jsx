@@ -11,21 +11,25 @@ const AdminDashboard = () => {
   const [openCreate, setOpenCreate] = useState(false);
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+          <p className="text-gray-600 mt-1">Manage appointments and visitors</p>
+        </div>
 
         <button
           onClick={() => setOpenCreate(true)}
-          className="flex items-center gap-2 bg-gradient-to-r from-gray-900 to-gray-800 text-white px-4 py-2 rounded"
+          className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-5 py-3 rounded-lg transition-all duration-150 shadow-md hover:shadow-lg"
         >
-          <Plus size={18} />
-          Create Appointment
+          <Plus size={20} />
+          <span className="font-medium">Create Appointment</span>
         </button>
       </div>
 
-      {/* STATS */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatsCard
           title="Total Appointments"
           value={stats.total}
@@ -52,14 +56,21 @@ const AdminDashboard = () => {
         />
       </div>
 
-      {/* TABLE */}
-      <div className="bg-white rounded-lg shadow p-4">
-        <h2 className="text-lg font-semibold mb-4">Appointment Requests</h2>
+      {/* Table Card */}
+      <div className="bg-white rounded-xl shadow-lg p-6">
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold text-gray-800">
+            Appointment Requests
+          </h2>
+          <p className="text-sm text-gray-600 mt-1">
+            Review and manage all appointment requests
+          </p>
+        </div>
 
         <AppointmentsTable role="ADMIN" />
       </div>
 
-      {/* CREATE MODAL */}
+      {/* Create Modal */}
       <CreateAppointmentModal
         open={openCreate}
         onClose={() => setOpenCreate(false)}
