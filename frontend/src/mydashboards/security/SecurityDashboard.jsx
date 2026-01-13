@@ -2,18 +2,21 @@ import { useEffect, useState } from "react";
 import api from "../../api/axios";
 import { toast } from "react-toastify";
 import StatCard from "../../components/StatsCard";
-import { ArrowRightToLine, DoorClosed, DoorOpen, Users } from "lucide-react";
+import {
+  ArrowRightToLine,
+  DoorClosed,
+  DoorOpen,
+  Users,
+  Scan,
+  User,
+} from "lucide-react";
 
 const SecurityDashboard = () => {
   const [token, setToken] = useState("");
   const [loading, setLoading] = useState(false);
   const [passData, setPassData] = useState(null);
-  const [mode, setMode] = useState("SCAN"); // SCAN | MANUAL
-
-  // Dynamic data
+  const [mode, setMode] = useState("SCAN");
   const [visitors, setVisitors] = useState([]);
-
-  /* ---------------- FETCH VISITORS ---------------- */
 
   const fetchVisitors = async () => {
     try {
@@ -28,14 +31,10 @@ const SecurityDashboard = () => {
     fetchVisitors();
   }, []);
 
-  /* ---------------- KPI VALUES ---------------- */
-
   const insideCount = visitors.filter((v) => v.isInside).length;
   const checkedInCount = visitors.filter((v) => v.entryTime).length;
   const checkedOutCount = visitors.filter((v) => v.exitTime).length;
   const totalVisitors = visitors.length;
-
-  /* ---------------- SCAN PASS ---------------- */
 
   const scanPass = async () => {
     if (!token) return toast.info("Enter pass token");
@@ -43,7 +42,6 @@ const SecurityDashboard = () => {
       setLoading(true);
       const res = await api.get(`/passes/scan/${token}`);
 
-      // API returns { pass, visitor, log } → use pass + visitor
       const pass = res.data.data.pass;
       const visitor = res.data.data.visitor;
 
@@ -53,8 +51,6 @@ const SecurityDashboard = () => {
       });
 
       toast.success("Pass verified");
-
-      // Refresh visitors to update KPIs
       await fetchVisitors();
     } catch (err) {
       toast.error(err.response?.data?.message || "Scan failed");
@@ -63,8 +59,6 @@ const SecurityDashboard = () => {
       setLoading(false);
     }
   };
-
-  /* ---------------- MANUAL FETCH ---------------- */
 
   const fetchByPass = async () => {
     if (!token) return toast.info("Enter pass token");
@@ -85,8 +79,6 @@ const SecurityDashboard = () => {
     }
   };
 
-  /* ---------------- UPDATE STATUS ---------------- */
-
   const updateStatus = async (newStatus) => {
     try {
       setLoading(true);
@@ -95,10 +87,7 @@ const SecurityDashboard = () => {
         newStatus === "used" ? "Check-in successful" : "Check-out successful"
       );
 
-      // Update status locally so UI reflects instantly
       setPassData((prev) => ({ ...prev, status: newStatus }));
-
-      // Refresh visitors for KPIs
       await fetchVisitors();
     } catch (err) {
       toast.error(err.response?.data?.message || "Update failed");
@@ -107,15 +96,17 @@ const SecurityDashboard = () => {
     }
   };
 
-  /* ---------------- UI ---------------- */
-
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6">
-      <h1 className="text-2xl font-semibold">Security Dashboard</h1>
+    <div className="p-6 space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold text-gray-800">Security Dashboard</h1>
+        <p className="text-gray-600 mt-1">
+          Monitor and manage visitor check-ins
+        </p>
+      </div>
 
-      {/* KPI CARDS */}
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           title="Visitors Inside"
           value={insideCount}
@@ -142,130 +133,188 @@ const SecurityDashboard = () => {
         />
       </div>
 
-      {/* MAIN GRID */}
+      {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* LEFT */}
+        {/* Left Section */}
         <div className="lg:col-span-2 space-y-6">
-          {/* MODE TOGGLE */}
-          <div className="flex gap-2">
+          {/* Mode Toggle */}
+          <div className="flex gap-3">
             <button
               onClick={() => setMode("SCAN")}
-              className={`px-4 py-2 rounded ${
-                mode === "SCAN" ? "bg-blue-600 text-white" : "bg-gray-200"
+              className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-150 ${
+                mode === "SCAN"
+                  ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md"
+                  : "bg-white text-gray-700 border-2 border-gray-300 hover:border-blue-500"
               }`}
             >
+              <Scan size={20} />
               Scan Mode
             </button>
 
             <button
               onClick={() => setMode("MANUAL")}
-              className={`px-4 py-2 rounded ${
-                mode === "MANUAL" ? "bg-blue-600 text-white" : "bg-gray-200"
+              className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-150 ${
+                mode === "MANUAL"
+                  ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md"
+                  : "bg-white text-gray-700 border-2 border-gray-300 hover:border-blue-500"
               }`}
             >
+              <User size={20} />
               Manual Mode
             </button>
           </div>
 
-          {/* TOKEN INPUT */}
-          <div className="bg-white p-4 rounded-xl shadow">
+          {/* Token Input Card */}
+          <div className="bg-white p-6 rounded-xl shadow-lg">
+            <label className="block text-sm font-medium text-gray-700 mb-3">
+              {mode === "SCAN" ? "Scan Pass Token" : "Enter Pass Token"}
+            </label>
             <div className="flex gap-3">
               <input
-                placeholder="Scan or enter pass token"
+                placeholder="Enter or scan pass token..."
                 value={token}
                 onChange={(e) => setToken(e.target.value)}
-                className="flex-1 border p-2 rounded"
+                className="flex-1 border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-150"
               />
               {mode === "SCAN" ? (
                 <button
                   onClick={scanPass}
                   disabled={loading}
-                  className="bg-green-600 text-white px-4 rounded"
+                  className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 rounded-lg font-medium transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
                 >
-                  Verify
+                  {loading ? "Verifying..." : "Verify"}
                 </button>
               ) : (
                 <button
                   onClick={fetchByPass}
                   disabled={loading}
-                  className="bg-orange-600 text-white px-4 rounded"
+                  className="bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white px-6 rounded-lg font-medium transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
                 >
-                  Fetch
+                  {loading ? "Fetching..." : "Fetch"}
                 </button>
               )}
             </div>
           </div>
 
-          {/* VISITOR CARD */}
+          {/* Visitor Card */}
           {passData ? (
-            <div className="bg-white p-5 rounded-xl shadow border-l-4 border-blue-500">
-              <h3 className="text-lg font-semibold">
-                {passData.visitor?.name}
-              </h3>
+            <div className="bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl shadow-lg border-l-4 border-blue-600">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-800">
+                    {passData.visitor?.name}
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Token:{" "}
+                    <span className="font-mono font-semibold">
+                      {passData.token}
+                    </span>
+                  </p>
+                </div>
+                <span
+                  className={`px-4 py-2 rounded-full text-sm font-semibold ${
+                    passData.status === "issued"
+                      ? "bg-yellow-100 text-yellow-700"
+                      : passData.status === "used"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-gray-100 text-gray-700"
+                  }`}
+                >
+                  {passData.status.toUpperCase()}
+                </span>
+              </div>
 
-              <p className="text-sm text-gray-500">
-                Token: <span className="font-mono">{passData.token}</span>
-              </p>
-
-              <p className="text-sm">
-                Status: <strong>{passData.status}</strong>
-              </p>
-
-              <div className="flex gap-3 mt-4">
+              <div className="flex gap-3 mt-6">
                 {passData.status === "issued" && (
                   <button
                     onClick={() => updateStatus("used")}
-                    className="bg-green-600 text-white px-4 py-2 rounded"
+                    disabled={loading}
+                    className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 py-3 rounded-lg font-medium transition-all duration-150 shadow-md hover:shadow-lg disabled:opacity-50"
                   >
+                    <DoorOpen size={20} />
                     Check-in
                   </button>
                 )}
                 {passData.status === "used" && (
                   <button
                     onClick={() => updateStatus("expired")}
-                    className="bg-red-600 text-white px-4 py-2 rounded"
+                    disabled={loading}
+                    className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-3 rounded-lg font-medium transition-all duration-150 shadow-md hover:shadow-lg disabled:opacity-50"
                   >
+                    <DoorClosed size={20} />
                     Check-out
                   </button>
                 )}
               </div>
             </div>
           ) : (
-            <div className="bg-white p-6 rounded-xl shadow text-center text-gray-500">
-              Ready to scan a visitor pass
+            <div className="bg-white p-12 rounded-xl shadow-lg text-center">
+              <div className="text-gray-400 mb-4">
+                <Scan size={64} className="mx-auto" />
+              </div>
+              <p className="text-gray-500 text-lg font-medium">
+                Ready to scan a visitor pass
+              </p>
+              <p className="text-gray-400 text-sm mt-2">
+                {mode === "SCAN" ? "Scan" : "Enter"} a pass token to get started
+              </p>
             </div>
           )}
         </div>
 
-        {/* RIGHT */}
+        {/* Right Section */}
         <div className="space-y-6">
-          {/* CURRENTLY INSIDE */}
-          <div className="bg-white p-4 rounded-xl shadow">
-            <h3 className="font-semibold mb-3">Currently Inside</h3>
-            <ul className="space-y-2 text-sm">
+          {/* Currently Inside Card */}
+          <div className="bg-white p-6 rounded-xl shadow-lg">
+            <h3 className="font-semibold text-lg mb-4 text-gray-800 flex items-center gap-2">
+              <Users size={20} className="text-blue-600" />
+              Currently Inside
+            </h3>
+            <div className="space-y-3">
               {visitors
                 .filter((v) => v.isInside)
-                .slice(-3) // take only last 3 visitors
+                .slice(-5)
                 .map((v) => (
-                  <li key={v._id} className="flex justify-between">
-                    <span>{v.name}</span>
-                    <span className="text-green-600">●</span>
-                  </li>
+                  <div
+                    key={v._id}
+                    className="flex justify-between items-center p-3 bg-gray-50 rounded-lg"
+                  >
+                    <span className="font-medium text-gray-800">{v.name}</span>
+                    <span className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
+                  </div>
                 ))}
 
               {insideCount === 0 && (
-                <li className="text-gray-400 text-center">
-                  No visitors inside
-                </li>
+                <div className="text-center py-8">
+                  <p className="text-gray-400">No visitors inside</p>
+                </div>
               )}
-            </ul>
+            </div>
           </div>
 
-          {/* SYSTEM STATUS */}
-          <div className="bg-white p-4 rounded-xl shadow text-sm">
-            <p>System Online</p>
-            <p>Shift: Morning</p>
-            <p>Guard: Security Staff</p>
+          {/* System Status Card */}
+          <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-6 rounded-xl shadow-lg text-white">
+            <h3 className="font-semibold text-lg mb-4">System Status</h3>
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-300">Status</span>
+                <span className="font-semibold text-green-400">● Online</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-300">Current Shift</span>
+                <span className="font-semibold">Morning</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-300">On Duty</span>
+                <span className="font-semibold">Security Staff</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-300">Time</span>
+                <span className="font-semibold">
+                  {new Date().toLocaleTimeString()}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
