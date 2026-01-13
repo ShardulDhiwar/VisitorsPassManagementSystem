@@ -57,8 +57,8 @@ const AdminDashboard = () => {
       </div>
 
       {/* Table Card */}
-      <div className="bg-white rounded-xl shadow-lg p-6">
-        <div className="mb-6">
+      <div className="bg-white rounded-xl shadow-lg px-6 py-2">
+        <div className="mb-2">
           <h2 className="text-xl font-semibold text-gray-800">
             Appointment Requests
           </h2>
