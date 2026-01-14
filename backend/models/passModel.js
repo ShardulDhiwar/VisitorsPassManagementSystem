@@ -27,7 +27,7 @@
 // // }, { timestamps: true });
 
 // // export default mongoose.model("Pass", passSchema);
- 
+
 
 // import mongoose from "mongoose";
 
@@ -88,6 +88,11 @@ const passSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "Visitor",
             required: true,
+        },
+        status: {
+            type: String,
+            enum: ["issued", "used", "expired"],
+            default: "issued",
         },
         token: {
             type: String,
