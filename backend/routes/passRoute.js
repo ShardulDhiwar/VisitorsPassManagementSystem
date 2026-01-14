@@ -1,5 +1,5 @@
 import express from "express";
-import {protect} from "../middlewares/authMiddleware.js";
+import { protect } from "../middlewares/authMiddleware.js";
 import requireRole from "../middlewares/roleMiddleware.js";
 import {
     issuePass,
@@ -10,18 +10,45 @@ import {
 
 const router = express.Router();
 
-// Issue pass
-router.post("/issue", issuePass);
+// --------------------------------------------------
+// ISSUE PASS (Admin / Reception)
+// --------------------------------------------------
+router.post(
+    "/issue",
+    protect,
+    requireRole("ADMIN"),
+    issuePass
+);
 
-// Scan QR Pass
-router.get("/scan/:token", protect,
+// --------------------------------------------------
+// SCAN QR PASS (Security)
+// --------------------------------------------------
+router.get(
+    "/scan/:token",
+    protect,
     requireRole("SECURITY"),
-    scanPass);
+    scanPass
+);
 
-// Get all passes
-router.get("/", getAllPasses);
+// --------------------------------------------------
+// GET ALL PASSES (Admin / Security)
+// --------------------------------------------------
+router.get(
+    "/",
+    protect,
+    requireRole("ADMIN", "SECURITY"),
+    getAllPasses
+);
 
-// Update pass status
-router.put("/:id/status", updatePassStatus);
+// --------------------------------------------------
+// UPDATE PASS STATUS (TOKEN BASED ✅ FIXED)
+// Token is now in the URL path instead of request body
+// --------------------------------------------------
+router.put(
+    "/:token/status",
+    protect,
+    requireRole("ADMIN", "SECURITY"),
+    updatePassStatus
+);
 
 export default router;
