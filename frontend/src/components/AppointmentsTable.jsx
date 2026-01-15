@@ -179,19 +179,19 @@ const AppointmentsTable = () => {
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-200">
-              <th className="text-left p-4 text-sm font-medium text-gray-600">
+              <th className="text-left p-2 text-sm font-medium text-gray-600">
                 Visitor
               </th>
-              <th className="text-left p-4 text-sm font-medium text-gray-600">
+              <th className="text-left p-2 text-sm font-medium text-gray-600">
                 Purpose
               </th>
-              <th className="text-left p-4 text-sm font-medium text-gray-600">
+              <th className="text-left p-2 text-sm font-medium text-gray-600">
                 Host
               </th>
-              <th className="text-left p-4 text-sm font-medium text-gray-600">
+              <th className="text-left p-2 text-sm font-medium text-gray-600">
                 Status
               </th>
-              <th className="text-left p-4 text-sm font-medium text-gray-600">
+              <th className="text-left p-2 text-sm font-medium text-gray-600">
                 Action
               </th>
             </tr>
@@ -206,13 +206,13 @@ const AppointmentsTable = () => {
                   key={item._id}
                   className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
                 >
-                  <td className="p-4 text-sm text-gray-900">
+                  <td className="p-2 text-sm text-gray-900">
                     {item.visitorId?.name || "—"}
                   </td>
-                  <td className="p-4 text-sm text-gray-900">{item.purpose}</td>
-                  <td className="p-4 text-sm text-gray-900">{item.hostName}</td>
+                  <td className="p-2 text-sm text-gray-900">{item.purpose}</td>
+                  <td className="p-2 text-sm text-gray-900">{item.hostName}</td>
 
-                  <td className="p-4">
+                  <td className="p-2">
                     <span
                       className={`inline-block px-3 py-1 rounded-md text-xs font-medium ${statusStyles[status]}`}
                     >
@@ -220,7 +220,7 @@ const AppointmentsTable = () => {
                     </span>
                   </td>
 
-                  <td className="p-4">
+                  <td className="p-2">
                     <div className="flex items-center gap-3">
                       <button
                         onClick={() => openDetails(item)}

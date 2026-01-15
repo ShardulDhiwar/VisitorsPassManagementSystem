@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { toast } from "react-toastify";
 
-const ROWS_PER_PAGE = 6;
+const ROWS_PER_PAGE = 8;
 
 const UsersPage = () => {
   const [users, setUsers] = useState([]);
@@ -107,7 +107,7 @@ const UsersPage = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="p-6 pb-0 space-y-6">
       <h1 className="text-2xl font-semibold text-gray-900">User Management</h1>
 
       {/* Stats Grid */}
@@ -136,20 +136,20 @@ const UsersPage = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Users Table */}
-        <div className="lg:col-span-2 bg-white rounded-lg shadow-sm overflow-hidden">
-          <table className="w-full">
+        <div className="lg:col-span-2 bg-gray-50 rounded-lg  overflow-hidden">
+          <table className="w-full bg-white">
             <thead>
               <tr className="border-b border-gray-200">
-                <th className="text-left p-4 text-sm font-medium text-gray-600">
+                <th className="text-left p-2 text-sm font-bold text-black">
                   Name
                 </th>
-                <th className="text-left p-4 text-sm font-medium text-gray-600">
+                <th className="text-left p-2 text-sm font-bold text-black">
                   Email
                 </th>
-                <th className="text-left p-4 text-sm font-medium text-gray-600">
+                <th className="text-left p-2 text-sm font-bold text-black">
                   Role
                 </th>
-                <th className="text-left p-4 text-sm font-medium text-gray-600">
+                <th className="text-left p-2 text-sm font-bold text-black">
                   Actions
                 </th>
               </tr>
@@ -161,9 +161,9 @@ const UsersPage = () => {
                   key={u._id}
                   className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
                 >
-                  <td className="p-4 text-sm text-gray-900">{u.name}</td>
-                  <td className="p-4 text-sm text-gray-900">{u.email}</td>
-                  <td className="p-4">
+                  <td className="p-2 text-sm text-gray-900">{u.name}</td>
+                  <td className="p-2 text-sm text-gray-900">{u.email}</td>
+                  <td className="p-2">
                     <span
                       className={`inline-block px-3 py-1 rounded-md text-xs font-medium ${
                         u.role === "ADMIN"
@@ -176,7 +176,7 @@ const UsersPage = () => {
                       {u.role}
                     </span>
                   </td>
-                  <td className="p-4">
+                  <td className="p-2">
                     <div className="flex items-center gap-3">
                       <button
                         onClick={() => handleEdit(u)}
@@ -203,7 +203,7 @@ const UsersPage = () => {
           </table>
 
           {/* Pagination */}
-          <div className="flex justify-center items-center gap-2 p-4 border-t border-gray-200">
+          <div className=" bg-white flex justify-center items-center gap-2 p-4 border-t border-b rounded-b-2xl border-gray-200">
             <button
               onClick={() => setPage((p) => Math.max(p - 1, 1))}
               disabled={page === 1}
@@ -239,14 +239,14 @@ const UsersPage = () => {
         </div>
 
         {/* Form Card */}
-        <div className="bg-white p-6 rounded-lg shadow-sm">
-          <h2 className="text-lg font-semibold mb-6 text-gray-900">
+        <div className="bg-white p-6 pt-3 rounded-lg shadow-sm">
+          <h2 className="text-lg font-bold mb-1 text-gray-900">
             {selectedUser ? "Edit User" : "Create New User"}
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Name
               </label>
               <input
@@ -260,7 +260,7 @@ const UsersPage = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Email
               </label>
               <input
@@ -276,7 +276,7 @@ const UsersPage = () => {
 
             {!selectedUser && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Password
                 </label>
                 <input
@@ -292,7 +292,7 @@ const UsersPage = () => {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Role
               </label>
               <select
@@ -307,7 +307,7 @@ const UsersPage = () => {
               </select>
             </div>
 
-            <div className="flex gap-3 pt-4">
+            <div className="flex gap-3 pt-2">
               <button
                 type="submit"
                 className="flex-1 bg-gray-900 hover:bg-gray-800 text-white py-2.5 rounded-lg text-sm font-medium transition-all"

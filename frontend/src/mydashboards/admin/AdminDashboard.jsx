@@ -11,7 +11,7 @@ const AdminDashboard = () => {
   const [openCreate, setOpenCreate] = useState(false);
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 pb-0 space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>

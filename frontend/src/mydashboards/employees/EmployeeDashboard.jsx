@@ -11,7 +11,7 @@ const EmployeeDashboard = () => {
   const [openCreate, setOpenCreate] = useState(false);
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 pb-0 space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
@@ -59,8 +59,8 @@ const EmployeeDashboard = () => {
       </div>
 
       {/* Table Card */}
-      <div className="bg-white rounded-xl shadow-lg p-6">
-        <div className="mb-6">
+      <div className="bg-white rounded-xl shadow-lg px-6 py-2">
+        <div className="mb-2">
           <h2 className="text-xl font-semibold text-gray-800">
             My Appointments
           </h2>

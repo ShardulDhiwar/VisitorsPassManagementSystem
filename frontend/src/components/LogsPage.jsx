@@ -95,7 +95,7 @@ const LogsPage = () => {
   const inside = Math.max(checkIns - checkOuts, 0);
 
   return (
-    <div className="space-y-6">
+    <div className="p-6 pb-0 space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-semibold text-gray-900">Security Logs</h1>
         <button
@@ -175,19 +175,19 @@ const LogsPage = () => {
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-200">
-              <th className="text-left p-4 text-sm font-medium text-gray-600">
+              <th className="text-left p-2 text-sm font-medium text-gray-600">
                 Visitor
               </th>
-              <th className="text-left p-4 text-sm font-medium text-gray-600">
+              <th className="text-left p-2 text-sm font-medium text-gray-600">
                 Action
               </th>
-              <th className="text-left p-4 text-sm font-medium text-gray-600">
+              <th className="text-left p-2 text-sm font-medium text-gray-600">
                 Token
               </th>
-              <th className="text-left p-4 text-sm font-medium text-gray-600">
+              <th className="text-left p-2 text-sm font-medium text-gray-600">
                 Done By
               </th>
-              <th className="text-left p-4 text-sm font-medium text-gray-600">
+              <th className="text-left p-2 text-sm font-medium text-gray-600">
                 Time
               </th>
             </tr>
@@ -200,10 +200,10 @@ const LogsPage = () => {
                   key={log._id}
                   className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
                 >
-                  <td className="p-4 text-sm text-gray-900">
+                  <td className="p-2 text-sm text-gray-900">
                     {log.visitorId?.name || "N/A"}
                   </td>
-                  <td className="p-4">
+                  <td className="p-2">
                     <span
                       className={`inline-flex items-center gap-1 px-3 py-1 rounded-md text-xs font-medium ${
                         log.action === "check-in"
@@ -219,13 +219,13 @@ const LogsPage = () => {
                       {log.action}
                     </span>
                   </td>
-                  <td className="p-4 text-sm font-mono text-gray-600">
+                  <td className="p-2 text-sm font-mono text-gray-600">
                     {log.passId?.token || "N/A"}
                   </td>
-                  <td className="p-4 text-sm text-gray-900">
+                  <td className="p-2 text-sm text-gray-900">
                     {log.doneBy || "System"}
                   </td>
-                  <td className="p-4 text-sm text-gray-600">
+                  <td className="p-2 text-sm text-gray-600">
                     {new Date(log.createdAt).toLocaleString()}
                   </td>
                 </tr>
