@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../api/axios";
 import { useAppointments } from "../context/AppointmentsContext"; // ✅ added
+import LoginSVG from "../assets/LoginSVGgreen.png";
 
-import LoginSVG from "../assets/LoginSVG.png";
+// import LoginSVG from "../assets/LoginSVG.png";
 import GateKeeper from "../assets/GateKeeper.png";
 import GateKeeperWhite from "../assets/GateKeeperWhite.png";
 
@@ -184,10 +185,10 @@ const VisitorForm = () => {
         </div>
 
         <img
-          src={LoginSVG}
-          alt="Login Illustration"
-          className="absolute bottom-7 right-8 w-200 opacity-40 rounded-2xl animate-slow-bounce"
-        />
+                  src={LoginSVG}
+                  alt="Login Illustration"
+                  className="absolute bottom-7 right-20 w-90 opacity-80 rounded-2xl animate-slow-bounce"
+                />
       </div>
     </div>
   );
