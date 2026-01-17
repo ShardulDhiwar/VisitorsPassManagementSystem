@@ -66,19 +66,17 @@ const VisitorForm = () => {
     <div className="min-h-screen flex bg-[#f6f4e8]">
       {/* LEFT — VISITOR FORM */}
       <div className="w-full lg:w-1/4 flex items-center justify-center flex-col">
-        <div className="flex flex-col justify-center w-80 min-h-120 max-w-md bg-[#f6f6ef] p-8 pt-4 rounded-xl shadow-lg border-2 border-green-400">
+        <div className=" flex flex-col justify-center w-80 min-h-120 max-w-md bg-[#f6f6ef] p-8 pt-4 rounded-xl shadow-lg border-2 border-black">
           <div className="flex flex-col items-center mb-4">
             <img
               src={GateKeeper}
               alt="GateKeeper Logo"
               className="w-14 h-auto"
             />
-            <h1 className="text-3xl font-bold text-[#163f38] mt-2">
-              GateKeeper
-            </h1>
+            <h1 className="text-3xl font-bold text-black mt-2">GateKeeper</h1>
           </div>
 
-          <h2 className="text-xl text-[#163f38] text-center mb-4">
+          <h2 className="text-xl text-black text-center mb-4">
             Visitor Appointment
           </h2>
 
@@ -90,7 +88,7 @@ const VisitorForm = () => {
               value={formData.name}
               onChange={handleChange}
               required
-              className="w-full p-3 rounded bg-gray-200 text-black outline-none focus:ring-2 focus:ring-green-400"
+              className="w-full p-3 rounded bg-gray-200 text-black outline-none focus:ring-2 focus:ring-gray-400"
             />
 
             <input
@@ -100,7 +98,7 @@ const VisitorForm = () => {
               value={formData.phone}
               onChange={handleChange}
               required
-              className="w-full p-3 rounded bg-gray-200 text-black outline-none focus:ring-2 focus:ring-green-400"
+              className="w-full p-3 rounded bg-gray-200 text-black outline-none focus:ring-2 focus:ring-gray-400"
             />
 
             <input
@@ -110,7 +108,7 @@ const VisitorForm = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full p-3 rounded bg-gray-200 text-black outline-none focus:ring-2 focus:ring-green-400"
+              className="w-full p-3 rounded bg-gray-200 text-black outline-none focus:ring-2 focus:ring-gray-400"
             />
 
             <input
@@ -120,7 +118,7 @@ const VisitorForm = () => {
               value={formData.whomToMeet}
               onChange={handleChange}
               required
-              className="w-full p-3 rounded bg-gray-200 text-black outline-none focus:ring-2 focus:ring-green-400"
+              className="w-full p-3 rounded bg-gray-200 text-black outline-none focus:ring-2 focus:ring-gray-400"
             />
 
             <input
@@ -130,13 +128,13 @@ const VisitorForm = () => {
               value={formData.purpose}
               onChange={handleChange}
               required
-              className="w-full p-3 rounded bg-gray-200 text-black outline-none focus:ring-2 focus:ring-green-400"
+              className="w-full p-3 rounded bg-gray-200 text-black outline-none focus:ring-2 focus:ring-gray-400"
             />
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-green-400 hover:bg-green-500 text-black py-3 rounded font-semibold disabled:opacity-60"
+              className="w-full bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900  text-white hover:from-gray-800 hover:to-gray-700 py-3 rounded font-semibold transition-all"
             >
               {loading ? "Submitting..." : "Request Appointment"}
             </button>
@@ -145,7 +143,7 @@ const VisitorForm = () => {
       </div>
 
       {/* RIGHT */}
-      <div className="hidden lg:flex lg:w-3/4 items-start bg-[#017d48] pl-8 pt-8 relative">
+      <div className="hidden lg:flex lg:w-3/4 items-start  bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 pl-8 pt-8 relative">
         <div className="w-full">
           <div className="flex items-center mb-4">
             <img
@@ -170,7 +168,7 @@ const VisitorForm = () => {
 
           <ul className="text-white text-md space-y-2 list-disc list-inside max-w-2xl">
             <li>Your appointment request is sent for approval</li>
-            <li>Admin or security will review your details</li>
+            <li>Admin or employee will review your details</li>
             <li>
               Once approved, you'll receive your{" "}
               <span className="font-semibold">entry pass</span> via email
@@ -188,7 +186,7 @@ const VisitorForm = () => {
         <img
           src={LoginSVG}
           alt="Login Illustration"
-          className="absolute bottom-8 right-8 w-190 animate-slow-bounce"
+          className="absolute bottom-7 right-8 w-200 opacity-40 rounded-2xl animate-slow-bounce"
         />
       </div>
     </div>

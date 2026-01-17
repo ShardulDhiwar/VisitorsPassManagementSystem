@@ -44,11 +44,11 @@ const LoginPage = () => {
               alt="GateKeeper Logo"
               className="w-15 h-auto mx-2"
             />
-            <h1 className="text-3xl font-bold text-[#163f38] text-center mb-6 ">
+            <h1 className="text-3xl font-bold text-black text-center mb-6 ">
               GateKeeper
             </h1>
           </div>
-          <h1 className="text-xl  text-[#163f38]  text-center mb-6">
+          <h1 className="text-xl  text-black text-center mb-6">
             Log in to your account
           </h1>
 
@@ -77,7 +77,7 @@ const LoginPage = () => {
               required
             />
 
-            <button className="w-full bg-gradient-to-r from-gray-900 to-gray-800 text-white hover:from-gray-800 hover:to-gray-700 py-3 rounded font-semibold transition-all">
+            <button className="w-full bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900  text-white hover:from-gray-800 hover:to-gray-700 py-3 rounded font-semibold transition-all">
               Sign In
             </button>
           </form>
@@ -85,7 +85,7 @@ const LoginPage = () => {
       </div>
 
       {/* RIGHT — IMAGE */}
-      <div className="hidden lg:flex lg:w-3/4 items-start bg-gradient-to-r from-gray-900 to-gray-800 pl-8 pt-8 relative">
+      <div className="hidden lg:flex lg:w-3/4 items-start bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900  pl-8 pt-8 relative">
         <div className="w-full">
           <div className="flex items-center mb-4">
             <img
@@ -116,7 +116,7 @@ const LoginPage = () => {
         <img
           src={LoginSVG}
           alt="Login Illustration"
-          className="absolute bottom-8 right-8 w-190 animate-slow-bounce"
+          className="absolute bottom-7 right-8 w-200 opacity-40 rounded-2xl animate-slow-bounce"
         />
       </div>
     </div>
